@@ -21,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
         TextView taskTextView = findViewById(R.id.userTask);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String username = sharedPreferences.getString("username", "user");
+        if(username == ""){
+            username = "user";
+        }
         taskTextView.setText(username + "'s tasks.");
 
         Button addTaskButton = findViewById(R.id.button);
