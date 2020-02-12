@@ -14,4 +14,6 @@
 
 - Created a settings page in which the user is able to set his own username which displays on the homepage. User can go to one of the three tasks to a taskDetail page to veiw the details for each unique task.
 
-![Homepage](screenshots/homepage2.png)
+![Homepage](screenshots/homepage_day2.png)
+
+![TaskDetail](screenshots/taskdetail.png)
