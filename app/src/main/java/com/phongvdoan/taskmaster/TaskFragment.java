@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.phongvdoan.taskmaster.dummy.DummyContent;
 import com.phongvdoan.taskmaster.dummy.DummyContent.DummyItem;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -71,7 +72,12 @@ public class TaskFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+
+            List<Task> listOfTasks = new LinkedList<>();
+            listOfTasks.add(new Task("Do Homework", "Please do your homework", "new"));
+            listOfTasks.add(new Task("Do Chores", "Clean da kitchen, Travis", "assigned"));
+            listOfTasks.add(new Task("Cook", "You need eat some food", "complete"));
+            recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(listOfTasks, null));
         }
         return view;
     }
@@ -82,10 +88,11 @@ public class TaskFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
         }
+//        else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnListFragmentInteractionListener");
+//        }
     }
 
     @Override
@@ -106,6 +113,6 @@ public class TaskFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Task item);
     }
 }
