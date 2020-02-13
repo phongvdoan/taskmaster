@@ -8,7 +8,6 @@
 
 ![Homepage](screenshots/homepage2.png)
 
-
 ## Get Data TaskMaster
 
 ### 12 Feb 2020
@@ -18,12 +17,3 @@
 ![Homepage](screenshots/homepage_day2.png)
 
 ![TaskDetail](screenshots/taskdetail.png)
-
-## RecyclerView
-
-### 13 Feb 2020
-
-- Created a RecyclerView to display a list of chores within the mainActivity.
-
-![Homepage](screenshots/homepage_day3.png)
-
