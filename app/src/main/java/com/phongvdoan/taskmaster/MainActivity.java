@@ -46,41 +46,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button doHomeworkButton = findViewById(R.id.doHomeworkButton);
-        doHomeworkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent gotToTaskDetailIntent = new Intent(MainActivity.this, TaskDetail.class);
-                TextView doHomework = findViewById(R.id.doHomeworkText);
-                gotToTaskDetailIntent.putExtra("task", doHomework.getText().toString());
-                MainActivity.this.startActivity(gotToTaskDetailIntent);
-            }
-        });
-
-        Button doChoresButton = findViewById(R.id.doChoresButton);
-        doChoresButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent gotToTaskDetailIntent = new Intent(MainActivity.this, TaskDetail.class);
-                TextView doChores = findViewById(R.id.doChoresText);
-                gotToTaskDetailIntent.putExtra("task", doChores.getText().toString());
-                MainActivity.this.startActivity(gotToTaskDetailIntent);
-            }
-        });
-
-        Button cookButton = findViewById(R.id.cookButton);
-        cookButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent gotToTaskDetailIntent = new Intent(MainActivity.this, TaskDetail.class);
-                TextView cook = findViewById(R.id.cookText);
-                gotToTaskDetailIntent.putExtra("task", cook.getText().toString());
-                MainActivity.this.startActivity(gotToTaskDetailIntent);
-            }
-        });
+//        Button doHomeworkButton = findViewById(R.id.doHomeworkButton);
+//        doHomeworkButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent gotToTaskDetailIntent = new Intent(MainActivity.this, TaskDetail.class);
+//                TextView doHomework = findViewById(R.id.doHomeworkText);
+//                gotToTaskDetailIntent.putExtra("task", doHomework.getText().toString());
+//                MainActivity.this.startActivity(gotToTaskDetailIntent);
+//            }
+//        });
+//
+//        Button doChoresButton = findViewById(R.id.doChoresButton);
+//        doChoresButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent gotToTaskDetailIntent = new Intent(MainActivity.this, TaskDetail.class);
+//                TextView doChores = findViewById(R.id.doChoresText);
+//                gotToTaskDetailIntent.putExtra("task", doChores.getText().toString());
+//                MainActivity.this.startActivity(gotToTaskDetailIntent);
+//            }
+//        });
+//
+//        Button cookButton = findViewById(R.id.cookButton);
+//        cookButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent gotToTaskDetailIntent = new Intent(MainActivity.this, TaskDetail.class);
+//                TextView cook = findViewById(R.id.cookText);
+//                gotToTaskDetailIntent.putExtra("task", cook.getText().toString());
+//                MainActivity.this.startActivity(gotToTaskDetailIntent);
+//            }
+//        });
 
         ImageButton settingsButton = findViewById(R.id.settingsButton);
         settingsButton.setOnClickListener(new View.OnClickListener() {
