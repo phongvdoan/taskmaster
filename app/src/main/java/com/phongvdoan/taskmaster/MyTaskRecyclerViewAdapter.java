@@ -37,7 +37,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mTitleView.setText(mValues.get(position).title);
-        holder.mBodyView.setText(mValues.get(position).body);
+//        holder.mBodyView.setText(mValues.get(position).body);
         holder.mStatusView.setText(mValues.get(position).state);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -60,7 +60,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mTitleView;
-        public final TextView mBodyView;
+//        public final TextView mBodyView;
         public final TextView mStatusView;
         public Task mItem;
 
@@ -68,13 +68,20 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
             super(view);
             mView = view;
             mTitleView = (TextView) view.findViewById(R.id.title);
-            mBodyView = (TextView) view.findViewById(R.id.content);
+//            mBodyView = (TextView) view.findViewById(R.id.content);
             mStatusView = (TextView) view.findViewById(R.id.status);
         }
 
+
+
+
         @Override
         public String toString() {
-            return super.toString() + " '" + mBodyView.getText() + "'";
+            return super.toString() + " '" + mTitleView.getText() + "'";
         }
+    }
+
+    public interface TaskListener{
+        void taskClick(int position);
     }
 }
