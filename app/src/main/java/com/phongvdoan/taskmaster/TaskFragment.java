@@ -12,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.phongvdoan.taskmaster.dummy.DummyContent;
-import com.phongvdoan.taskmaster.dummy.DummyContent.DummyItem;
 
 import java.util.LinkedList;
 import java.util.List;

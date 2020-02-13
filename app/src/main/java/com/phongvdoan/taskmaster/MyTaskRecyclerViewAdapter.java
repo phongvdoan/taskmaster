@@ -57,7 +57,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements TaskListener {
         public final View mView;
         public final TextView mTitleView;
 //        public final TextView mBodyView;
@@ -78,6 +78,11 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
         @Override
         public String toString() {
             return super.toString() + " '" + mTitleView.getText() + "'";
+        }
+
+        @Override
+        public void taskClick(int position) {
+
         }
     }
 

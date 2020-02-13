@@ -13,7 +13,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements MyTaskRecyclerViewAdapter.TaskListener {
+
+    private List<Task> mValues = new LinkedList<>();
+    private MyTaskRecyclerViewAdapter myTaskRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +128,9 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
 
     @Override
     public void taskClick(int position) {
-        
+        mValues.get(position);
+        Intent intent = new Intent(this, TaskDetail.class);
+        startActivity(intent);
+
     }
 }
