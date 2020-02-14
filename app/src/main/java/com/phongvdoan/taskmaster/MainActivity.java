@@ -1,6 +1,7 @@
 package com.phongvdoan.taskmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,15 +9,23 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+    private List<Task> mValues = new LinkedList<>();
+    private MyTaskRecyclerViewAdapter myTaskRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         TextView taskTextView = findViewById(R.id.userTask);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -46,41 +55,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button doHomeworkButton = findViewById(R.id.doHomeworkButton);
-        doHomeworkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent gotToTaskDetailIntent = new Intent(MainActivity.this, TaskDetail.class);
-                TextView doHomework = findViewById(R.id.doHomeworkText);
-                gotToTaskDetailIntent.putExtra("task", doHomework.getText().toString());
-                MainActivity.this.startActivity(gotToTaskDetailIntent);
-            }
-        });
-
-        Button doChoresButton = findViewById(R.id.doChoresButton);
-        doChoresButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent gotToTaskDetailIntent = new Intent(MainActivity.this, TaskDetail.class);
-                TextView doChores = findViewById(R.id.doChoresText);
-                gotToTaskDetailIntent.putExtra("task", doChores.getText().toString());
-                MainActivity.this.startActivity(gotToTaskDetailIntent);
-            }
-        });
-
-        Button cookButton = findViewById(R.id.cookButton);
-        cookButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent gotToTaskDetailIntent = new Intent(MainActivity.this, TaskDetail.class);
-                TextView cook = findViewById(R.id.cookText);
-                gotToTaskDetailIntent.putExtra("task", cook.getText().toString());
-                MainActivity.this.startActivity(gotToTaskDetailIntent);
-            }
-        });
+//        Button doHomeworkButton = findViewById(R.id.taskbutton);
+//        doHomeworkButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent gotToTaskDetailIntent = new Intent(MainActivity.this, TaskDetail.class);
+//                TextView doHomework = findViewById(R.id.doHomeworkText);
+//                gotToTaskDetailIntent.putExtra("task", doHomework.getText().toString());
+//                MainActivity.this.startActivity(gotToTaskDetailIntent);
+//            }
+//        });
+//
+//        Button doChoresButton = findViewById(R.id.doChoresButton);
+//        doChoresButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent gotToTaskDetailIntent = new Intent(MainActivity.this, TaskDetail.class);
+//                TextView doChores = findViewById(R.id.doChoresText);
+//                gotToTaskDetailIntent.putExtra("task", doChores.getText().toString());
+//                MainActivity.this.startActivity(gotToTaskDetailIntent);
+//            }
+//        });
+//
+//        Button cookButton = findViewById(R.id.cookButton);
+//        cookButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent gotToTaskDetailIntent = new Intent(MainActivity.this, TaskDetail.class);
+//                TextView cook = findViewById(R.id.cookText);
+//                gotToTaskDetailIntent.putExtra("task", cook.getText().toString());
+//                MainActivity.this.startActivity(gotToTaskDetailIntent);
+//            }
+//        });
 
         ImageButton settingsButton = findViewById(R.id.settingsButton);
         settingsButton.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(gotToSettingslIntent);
             }
         });
+
+
+
 
     }
 
@@ -103,4 +115,15 @@ public class MainActivity extends AppCompatActivity {
         taskTextView.setText(username + "'s tasks.");
 
     }
+
+
+    public void sendMessage(View view) {
+        Intent intent = new Intent(this, TaskDetail.class);
+        TextView title = findViewById(R.id.title);
+        String titleString = title.getText().toString();
+        intent.putExtra("task", titleString);
+        startActivity(intent);
+
+    }
+
 }
