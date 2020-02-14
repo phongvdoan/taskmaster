@@ -16,7 +16,7 @@ import android.widget.TextView;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MyTaskRecyclerViewAdapter.TaskListener {
+public class MainActivity extends AppCompatActivity {
 
     private List<Task> mValues = new LinkedList<>();
     private MyTaskRecyclerViewAdapter myTaskRecyclerViewAdapter;
@@ -126,11 +126,4 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
 
     }
 
-    @Override
-    public void taskClick(int position) {
-        mValues.get(position);
-        Intent intent = new Intent(this, TaskDetail.class);
-        startActivity(intent);
-
-    }
 }

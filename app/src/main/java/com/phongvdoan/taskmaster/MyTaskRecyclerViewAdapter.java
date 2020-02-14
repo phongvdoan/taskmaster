@@ -2,6 +2,8 @@ package com.phongvdoan.taskmaster;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +22,12 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
 
     private final List<Task> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private final Context mContext;
 
-    public MyTaskRecyclerViewAdapter(List<Task> items, OnListFragmentInteractionListener listener) {
+    public MyTaskRecyclerViewAdapter(List<Task> items, OnListFragmentInteractionListener listener, Context context) {
         mValues = items;
         mListener = listener;
+        mContext = context;
     }
 
     @Override
@@ -43,12 +47,13 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
+                    Context context = v.getContext();
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    Intent taskDetail = new Intent(mContext, TaskDetail.class);
+                    taskDetail.putExtra("task", holder.mTitleView.getText());
+                    context.startActivity(taskDetail);
                 }
-            }
         });
     }
 
@@ -57,7 +62,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements TaskListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mTitleView;
 //        public final TextView mBodyView;
@@ -80,13 +85,6 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
             return super.toString() + " '" + mTitleView.getText() + "'";
         }
 
-        @Override
-        public void taskClick(int position) {
-
-        }
     }
 
-    public interface TaskListener{
-        void taskClick(int position);
-    }
 }
