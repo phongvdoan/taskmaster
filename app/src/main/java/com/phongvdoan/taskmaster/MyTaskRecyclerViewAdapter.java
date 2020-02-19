@@ -38,7 +38,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
         holder.mTitleView.setText(mValues.get(position).title);
 //        holder.mBodyView.setText(mValues.get(position).body);
@@ -51,7 +51,9 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     Intent taskDetail = new Intent(mContext, TaskDetail.class);
-                    taskDetail.putExtra("task", holder.mTitleView.getText());
+                    taskDetail.putExtra("id", mValues.get(position).id);
+//                    taskDetail.putExtra("description", mValues.get(position).body);
+//                    taskDetail.putExtra("status", mValues.get(position).state);
                     context.startActivity(taskDetail);
                 }
         });

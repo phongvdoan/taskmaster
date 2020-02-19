@@ -10,7 +10,7 @@
         android:id="@+id/userTask"
         android:layout_width="95dp"
         android:layout_height="34dp"
-        android:text="Add Task"
+        android:text="@string/add_task"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,36 +32,50 @@
         app:layout_constraintTop_toBottomOf="@+id/userTask">
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/titleLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Task description"
-            app:layout_constraintBottom_toTopOf="@+id/editText2"
+            android:text="@string/task_title"
+            app:layout_constraintBottom_toTopOf="@+id/titleEditText"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.14"
+            app:layout_constraintHorizontal_bias="0.121"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.058" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/titleEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/editText2"
+            android:labelFor="@id/titleLabel"
+            app:layout_constraintBottom_toTopOf="@+id/desciptEditText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.215"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.198" />
 
+        <TextView
+            android:id="@+id/descripLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/task_description"
+            app:layout_constraintBottom_toTopOf="@+id/desciptEditText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleEditText"
+            app:layout_constraintVertical_bias="1.0" />
+
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/desciptEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
+            android:labelFor="@id/descripLabel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.215"
@@ -69,17 +83,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.374" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Task title"
-            app:layout_constraintBottom_toTopOf="@+id/editText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.121"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.058" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
@@ -87,7 +90,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
-        android:text="Add Tasks"
+        android:text="@string/add_tasks"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.121"
@@ -99,7 +102,7 @@
         android:id="@+id/textView4"
         android:layout_width="124dp"
         android:layout_height="32dp"
-        android:text="Submitted"
+        android:text="@string/submitted"
         android:textSize="24sp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"

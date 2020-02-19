@@ -1,6 +1,7 @@
 package com.phongvdoan.taskmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import java.util.prefs.PreferenceChangeEvent;
 
 public class TaskDetail extends AppCompatActivity {
 
+    public TaskDatabase taskDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,17 +21,21 @@ public class TaskDetail extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
+
+        Long id = getIntent().getLongExtra("id", 0);
+        Task oneTask = taskDatabase.taskDao().getOne(id);
         TextView taskTextVeiw = findViewById(R.id.taskTitle);
-        String newTask = getIntent().getStringExtra("task");
-        taskTextVeiw.setText(newTask);
+        taskTextVeiw.setText(oneTask.title);
+        TextView desciptTextVeiw = findViewById(R.id.taskBody);
+        desciptTextVeiw.setText(oneTask.body);
+        TextView statusTextVeiw = findViewById(R.id.taskStatus);
+        statusTextVeiw.setText(oneTask.state);
+
     }
 }
