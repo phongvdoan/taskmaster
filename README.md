@@ -26,3 +26,13 @@
 - Created a RecyclerView to display a list of chores within the mainActivity.
 
 <img src="screenshots/homepage_day3.png" width="200"/>
+
+## Room
+
+### 19 Feb 2020
+
+- Connected database to store and grab Tasks
+
+<img src="screenshots/homepage_day4.png" width="200"/>
+<br>
+<img src="screenshots/taskdetail_day4.png" width="200"/>
