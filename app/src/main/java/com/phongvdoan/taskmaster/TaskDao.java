@@ -8,6 +8,7 @@ import java.util.List;
 
 @Dao
 public abstract class TaskDao {
+
     @Query("SELECT * FROM task ORDER BY id DESC")
     abstract List<Task> getAll();
 
