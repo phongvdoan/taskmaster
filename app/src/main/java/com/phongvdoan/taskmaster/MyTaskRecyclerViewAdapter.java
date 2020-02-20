@@ -51,7 +51,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     Intent taskDetail = new Intent(mContext, TaskDetail.class);
-                    taskDetail.putExtra("id", mValues.get(position).id);
+                    taskDetail.putExtra("id", holder.mItem.id);
 //                    taskDetail.putExtra("description", mValues.get(position).body);
 //                    taskDetail.putExtra("status", mValues.get(position).state);
                     context.startActivity(taskDetail);

@@ -42,4 +42,8 @@ public class Task {
     public void setState(String state) {
         this.state = state;
     }
+
+    public long getId() {
+        return id;
+    }
 }

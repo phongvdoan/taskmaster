@@ -7,15 +7,15 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public abstract class TaskDao {
+public interface TaskDao {
 
     @Query("SELECT * FROM task ORDER BY id DESC")
-    abstract List<Task> getAll();
+     List<Task> getAll();
 
     @Query("SELECT * FROM task WHERE id= :id")
-    abstract Task getOne(long id);
+     Task getOne(long id);
 
     @Insert
-    abstract void save(Task task);
+     void save(Task task);
 
 }
