@@ -10,7 +10,7 @@
         android:id="@+id/userTask"
         android:layout_width="95dp"
         android:layout_height="34dp"
-        android:text="All Tasks"
+        android:text="@string/all_tasks"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,16 +21,24 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.08" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="412dp"
-        android:layout_height="371dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView2"
+        android:layout_width="406dp"
+        android:layout_height="416dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.551"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userTask"
-        app:layout_constraintVertical_bias="0.143"
-        app:srcCompat="@android:drawable/ic_lock_idle_alarm" />
+        app:layout_constraintVertical_bias="0.248" />
+
+    <fragment
+        android:id="@+id/fragment2"
+        android:name="com.phongvdoan.taskmaster.TaskFragment"
+        android:layout_width="212dp"
+        android:layout_height="295dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/recyclerView2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.phongvdoan.taskmaster.TaskFragment.OnListFragmentInteractionListener;
 
@@ -49,12 +50,19 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
             public void onClick(View v) {
                     Context context = v.getContext();
                     // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
+                    // fragment is attached to one) that an item has been selected
+                // https://stackoverflow.com/questions/21453254/determine-if-context-is-a-specific-activity
+                    if(mContext.getClass() == MainActivity.class){
                     Intent taskDetail = new Intent(mContext, TaskDetail.class);
                     taskDetail.putExtra("id", holder.mItem.id);
 //                    taskDetail.putExtra("description", mValues.get(position).body);
 //                    taskDetail.putExtra("status", mValues.get(position).state);
                     context.startActivity(taskDetail);
+                    } else {
+                        String stringForToast = String.format("%s %s %s", holder.mItem.title, holder.mItem.body, holder.mItem.state);
+                        Toast saveToast = Toast.makeText(mContext, stringForToast, Toast.LENGTH_SHORT);
+                        saveToast.show();
+                    }
                 }
         });
     }
