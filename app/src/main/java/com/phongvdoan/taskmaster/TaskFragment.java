@@ -1,6 +1,7 @@
 package com.phongvdoan.taskmaster;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,9 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-import java.util.LinkedList;
-import java.util.List;
+import java.net.URI;
 
 /**
  * A fragment representing a list of Items.
@@ -25,9 +24,11 @@ import java.util.List;
 public class TaskFragment extends Fragment {
 
     // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String ARG_TITLE_PARAM = "taskTitle";
+    private static final String ARG_STATE_PARAM = "taskState";
     // TODO: Customize parameters
-    private int mColumnCount = 1;
+    private String taskTitle;
+    private String taskState;
     private OnListFragmentInteractionListener mListener;
 
     /**
@@ -39,10 +40,11 @@ public class TaskFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static TaskFragment newInstance(int columnCount) {
+    public static TaskFragment newInstance(String taskTitle, String taskState) {
         TaskFragment fragment = new TaskFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putString(ARG_TITLE_PARAM, taskTitle);
+        args.putString(ARG_STATE_PARAM, taskState);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,7 +54,8 @@ public class TaskFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            taskTitle = getArguments().getString(ARG_TITLE_PARAM);
+            taskTitle = getArguments().getString(ARG_STATE_PARAM);
         }
     }
 
@@ -62,18 +65,16 @@ public class TaskFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
 
-        }
-        return view;
+       return view;
     }
+    public void onButtonPressed(Uri uri){
+        if (mListener != null) {
+            mListener.onListFragmentInteraction(uri);
+        }
+    }
+
+
 
 
     @Override
@@ -81,13 +82,10 @@ public class TaskFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnListFragmentInteractionListener");
         }
-
-
-//        else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnListFragmentInteractionListener");
-//        }
     }
 
     @Override
@@ -108,6 +106,6 @@ public class TaskFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(Task item);
+        void onListFragmentInteraction(Uri uri);
     }
 }

@@ -1,7 +1,6 @@
 package com.phongvdoan.taskmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -10,19 +9,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MyTaskRecyclerViewAdapter.TaskListener {
 
+    private String TAG= "pvd.main";
     private List<Task> taskList = new LinkedList<>();
-    public TaskDatabase taskDatabase;
+    TaskDatabase taskDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(this.taskList, null, this));
+        recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(this.taskList, this));
 
         TextView taskTextView = findViewById(R.id.userTask);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -129,11 +129,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendMessage(View view) {
         Intent intent = new Intent(this, TaskDetail.class);
-        TextView title = findViewById(R.id.title);
+        TextView title = findViewById(R.id.taskTitle);
         String titleString = title.getText().toString();
         intent.putExtra("task", titleString);
         startActivity(intent);
 
     }
 
+    @Override
+    public void onClickOnTaskCallback(Task task) {
+        Log.i(TAG, task.title + "was clicked");
+        Intent taskDetailIntent = new Intent(this, TaskDetail.class);
+        taskDetailIntent.putExtra("id", task.id);
+        MainActivity.this.startActivity(taskDetailIntent);
+
+    }
 }

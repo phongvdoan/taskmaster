@@ -12,7 +12,7 @@ import java.util.prefs.PreferenceChangeEvent;
 
 public class TaskDetail extends AppCompatActivity {
 
-    public TaskDatabase taskDatabase;
+    TaskDatabase taskDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

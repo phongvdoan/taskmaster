@@ -134,7 +134,7 @@ public class MainActivityTest {
         appCompatButton3.perform(click());
 
         ViewInteraction textView3 = onView(
-                allOf(withId(R.id.title), withText("testTitle"),
+                allOf(withId(R.id.taskTitle), withText("testTitle"),
                         childAtPosition(
                                 allOf(withId(R.id.taskList),
                                         childAtPosition(
@@ -145,7 +145,7 @@ public class MainActivityTest {
         textView3.check(matches(withText("testTitle")));
 
         ViewInteraction textView4 = onView(
-                allOf(withId(R.id.status), withText("New"),
+                allOf(withId(R.id.taskState), withText("New"),
                         childAtPosition(
                                 allOf(withId(R.id.taskList),
                                         childAtPosition(
