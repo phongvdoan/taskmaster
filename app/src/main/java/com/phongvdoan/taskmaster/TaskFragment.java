@@ -71,11 +71,6 @@ public class TaskFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            List<Task> listOfTasks = new LinkedList<>();
-            listOfTasks.add(new Task("Do Homework", "Please do your homework", "new"));
-            listOfTasks.add(new Task("Do Chores", "Clean da kitchen, Travis", "assigned"));
-            listOfTasks.add(new Task("Cook", "You need eat some food", "complete"));
-            recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(listOfTasks, null, context));
         }
         return view;
     }
