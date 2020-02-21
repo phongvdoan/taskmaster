@@ -1,6 +1,7 @@
 package com.phongvdoan.taskmaster;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -13,7 +14,7 @@ public interface TaskDao {
      List<Task> getAll();
 
     @Query("SELECT * FROM task WHERE id= :id")
-     Task getOne(long id);
+     Task getOne(String id);
 
     @Insert
      void save(Task task);
