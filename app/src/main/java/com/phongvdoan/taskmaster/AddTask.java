@@ -11,16 +11,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
+
 public class AddTask extends AppCompatActivity {
 
+
+    //Local Database variable
     TaskDatabase taskDatabase;
+    //AWS Database
+    private AWSAppSyncClient awsAppSyncClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
+
+        //connect to local database
         taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
 
+        //
 
         Button submitButtom = findViewById(R.id.button);
         submitButtom.setOnClickListener(new View.OnClickListener() {
