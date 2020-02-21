@@ -36,3 +36,11 @@
 <img src="screenshots/homepage_day4.png" width="200"/>
 <br>
 <img src="screenshots/taskdetail_day4.png" width="200"/>
+
+## Polish
+
+### 20 Feb 2020
+
+- Add RecyclerView to All Task Activity to display all tasks from DB. When clicked on a toast appears with details on the task.
+
+<img src="screenshots/alltaskToast.png" width="200"/>
