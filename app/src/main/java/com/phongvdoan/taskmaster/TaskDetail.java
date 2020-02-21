@@ -28,7 +28,7 @@ public class TaskDetail extends AppCompatActivity {
 
         taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
 
-        Long id = getIntent().getLongExtra("id", 0);
+        String id = getIntent().getStringExtra("id");
         Task oneTask = taskDatabase.taskDao().getOne(id);
         TextView taskTextVeiw = findViewById(R.id.taskTitle);
         taskTextVeiw.setText(oneTask.title);

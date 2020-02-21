@@ -1,13 +1,16 @@
 package com.phongvdoan.taskmaster;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -15,8 +18,18 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.amazonaws.amplify.generated.graphql.ListTasksQuery;
+import com.amazonaws.mobile.config.AWSConfiguration;
+import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
+import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
+import com.apollographql.apollo.GraphQLCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
+
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 public class MainActivity extends AppCompatActivity implements MyTaskRecyclerViewAdapter.TaskListener {
 
@@ -24,18 +37,27 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
     private List<Task> taskList = new LinkedList<>();
     TaskDatabase taskDatabase;
 
+    private AWSAppSyncClient awsAppSyncClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
-        this.taskList = taskDatabase.taskDao().getAll();
+//        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
+//        this.taskList = taskDatabase.taskDao().getAll();
+
+        awsAppSyncClient = AWSAppSyncClient.builder()
+                .context(getApplicationContext())
+                .awsConfiguration(new AWSConfiguration(getApplicationContext()))
+                .build();
+
+        getAllTasksFromDynamoDB();
 
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(this.taskList, this));
+        recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(this.taskList, MainActivity.this));
 
         TextView taskTextView = findViewById(R.id.userTask);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -117,12 +139,13 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    protected void onResume() {
+        super.onResume();
         TextView taskTextView = findViewById(R.id.userTask);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String username = sharedPreferences.getString("username", "user");
         taskTextView.setText(username + "'s tasks.");
+        getAllTasksFromDynamoDB();
 
     }
 
@@ -140,8 +163,44 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
     public void onClickOnTaskCallback(Task task) {
         Log.i(TAG, task.title + "was clicked");
         Intent taskDetailIntent = new Intent(this, TaskDetail.class);
-        taskDetailIntent.putExtra("id", task.id);
+        taskDetailIntent.putExtra("id", task.dynamoDBId);
         MainActivity.this.startActivity(taskDetailIntent);
 
     }
+
+    public void getAllTasksFromDynamoDB(){
+        awsAppSyncClient.query(ListTasksQuery.builder().build())
+                .responseFetcher(AppSyncResponseFetchers.CACHE_AND_NETWORK)
+                .enqueue(todosCallback);
+    }
+
+    private GraphQLCall.Callback<ListTasksQuery.Data> todosCallback = new GraphQLCall.Callback<ListTasksQuery.Data>() {
+        @Override
+        public void onResponse(@Nonnull Response<ListTasksQuery.Data> response) {
+            Log.i(TAG, response.data().listTasks().items().toString());
+            if (taskList.size() == 0 || response.data().listTasks().items().size() != taskList.size()) {
+                taskList.clear();
+                for (ListTasksQuery.Item item : response.data().listTasks().items()) {
+                    Task retrievedTask = new Task(item.title(), item.body(), item.state(), item.id());
+                    taskList.add(retrievedTask);
+                }
+                Handler handlerForMainThread = new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(@NonNull Message msg) {
+                        super.handleMessage(msg);
+                        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                    }
+                };
+
+                handlerForMainThread.obtainMessage().sendToTarget();
+
+            }
+        }
+
+        @Override
+        public void onFailure(@Nonnull ApolloException e) {
+            Log.e(TAG, e.toString());
+        }
+    };
 }

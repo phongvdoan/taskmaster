@@ -1,25 +1,23 @@
 package com.phongvdoan.taskmaster;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.phongvdoan.taskmaster.TaskFragment.OnListFragmentInteractionListener;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Task} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link TaskListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecyclerViewAdapter.TasksViewHolder> {
 
     private final List<Task> tasks;
-    private final TaskListener listener;
+    final TaskListener listener;
 
     public MyTaskRecyclerViewAdapter(List<Task> tasks, TaskListener listener) {
         this.tasks = tasks;
