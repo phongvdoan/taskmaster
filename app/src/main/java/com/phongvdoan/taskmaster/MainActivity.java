@@ -1,37 +1,69 @@
 package com.phongvdoan.taskmaster;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.amazonaws.amplify.generated.graphql.ListTasksQuery;
+import com.amazonaws.mobile.config.AWSConfiguration;
+import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
+import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
+import com.apollographql.apollo.GraphQLCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 public class MainActivity extends AppCompatActivity {
 
+    private String TAG = "pvd.main";
+
     private List<Task> taskList = new LinkedList<>();
-    public TaskDatabase taskDatabase;
+
+    //declare local database
+    private TaskDatabase taskDatabase;
+
+    //declare awsclient
+    private AWSAppSyncClient awsAppSyncClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //connect to local database
         taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
-        this.taskList = taskDatabase.taskDao().getAll();
 
+        //connect to AWS
+        awsAppSyncClient = AWSAppSyncClient.builder()
+                .context(getApplicationContext())
+                .awsConfiguration(new AWSConfiguration(getApplicationContext()))
+                .build();
+
+//        this.taskList = taskDatabase.taskDao().getAll();
+
+        //call method to retrieve tasks from AWS
+        taskList = new LinkedList<>();
+        getTasksFromDynamoDB();
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -116,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -135,5 +168,32 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    public void getTasksFromDynamoDB(){
+        awsAppSyncClient.query(ListTasksQuery.builder().build())
+                .responseFetcher(AppSyncResponseFetchers.CACHE_AND_NETWORK)
+                .enqueue(getTasksFromDynamoDBCallback);
+    }
+
+    private GraphQLCall.Callback<ListTasksQuery.Data> getTasksFromDynamoDBCallback = new GraphQLCall.Callback<ListTasksQuery.Data>() {
+        @Override
+        public void onResponse(@Nonnull Response<ListTasksQuery.Data> response) {
+            Log.i(TAG, response.data().listTasks().items().toString());
+
+            if(taskList.size() == 0 || response.data().listTasks().items().size() != taskList.size()) {
+               taskList.clear();
+                for (ListTasksQuery.Item item : response.data().listTasks().items()) {
+                    Task retrievedTask = new Task(item.title(), item.body(), item.state(), item.id());
+                    taskList.add(retrievedTask);
+                }
+
+            }
+        }
+
+        @Override
+        public void onFailure(@Nonnull ApolloException e) {
+            Log.e(TAG, e.toString());
+        }
+    };
 
 }

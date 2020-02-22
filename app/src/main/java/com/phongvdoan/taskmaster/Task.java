@@ -9,6 +9,7 @@ public class Task {
     @PrimaryKey(autoGenerate = true)
     long id;
 
+    public String dynamoDBID;
     String title;
     String body;
     String state;
@@ -17,6 +18,13 @@ public class Task {
         this.title = title;
         this.body = body;
         this.state = state;
+    }
+
+    public Task(String title, String body, String state, String id) {
+        this.title = title;
+        this.body = body;
+        this.state = state;
+        this.dynamoDBID = id;
     }
 
     public String getTitle() {
@@ -45,5 +53,13 @@ public class Task {
 
     public long getId() {
         return id;
+    }
+
+    public String getDynamoDBID() {
+        return dynamoDBID;
+    }
+
+    public void setDynamoDBID(String dynamoDBID) {
+        this.dynamoDBID = dynamoDBID;
     }
 }

@@ -53,8 +53,13 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
                     // fragment is attached to one) that an item has been selected
                 // https://stackoverflow.com/questions/21453254/determine-if-context-is-a-specific-activity
                     if(mContext.getClass() == MainActivity.class){
-                    Intent taskDetail = new Intent(mContext, TaskDetail.class);
-                    taskDetail.putExtra("id", holder.mItem.id);
+                        Intent taskDetail = new Intent(mContext, TaskDetail.class);
+                        System.out.println("holder = " + holder.mItem.id);
+                        taskDetail.putExtra("id", holder.mItem.dynamoDBID);
+                        taskDetail.putExtra("title", holder.mItem.title);
+                        taskDetail.putExtra("body", holder.mItem.body);
+                        taskDetail.putExtra("state", holder.mItem.state);
+
 //                    taskDetail.putExtra("description", mValues.get(position).body);
 //                    taskDetail.putExtra("status", mValues.get(position).state);
                     context.startActivity(taskDetail);
