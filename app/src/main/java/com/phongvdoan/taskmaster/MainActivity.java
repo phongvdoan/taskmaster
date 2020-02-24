@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
         TextView taskTextView = findViewById(R.id.userTask);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String username = sharedPreferences.getString("username", "user");
-        if(username == ""){
+        if(username.equals("")){
             username = "user";
         }
         taskTextView.setText(username + "'s tasks.");

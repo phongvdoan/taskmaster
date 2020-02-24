@@ -19,4 +19,7 @@ public interface TaskDao {
     @Insert
      void save(Task task);
 
+    @Delete
+    void delete(Task task);
+
 }
