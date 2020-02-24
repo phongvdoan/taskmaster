@@ -84,6 +84,8 @@ public class AddTask extends AppCompatActivity {
             String body = response.data().createTask().body();
             Task newTask = new Task(title,body, "New", dynamoDBID);
             taskDatabase.taskDao().save(newTask);
+            Intent gotToMainActivityIntent = new Intent(AddTask.this, MainActivity.class);
+            AddTask.this.startActivity(gotToMainActivityIntent);
         }
 
         @Override

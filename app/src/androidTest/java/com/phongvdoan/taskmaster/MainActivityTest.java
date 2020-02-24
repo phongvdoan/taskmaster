@@ -13,14 +13,15 @@ import androidx.test.runner.AndroidJUnit4;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -40,6 +41,10 @@ public class MainActivityTest {
 
     @Test
     public void mainActivityTest() {
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
         ViewInteraction appCompatImageButton = onView(
                 allOf(withId(R.id.settingsButton), withContentDescription("TODO"),
                         childAtPosition(
@@ -49,6 +54,11 @@ public class MainActivityTest {
                                 3),
                         isDisplayed()));
         appCompatImageButton.perform(click());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
 
         ViewInteraction textInputEditText = onView(
                 allOf(withId(R.id.username),
@@ -60,6 +70,10 @@ public class MainActivityTest {
                         isDisplayed()));
         textInputEditText.perform(replaceText("Phong"), closeSoftKeyboard());
 
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.saveButton), withText("Save"),
                         childAtPosition(
@@ -69,6 +83,11 @@ public class MainActivityTest {
                                 1),
                         isDisplayed()));
         appCompatButton.perform(click());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.userTask), withText("Phong's tasks."),
@@ -80,8 +99,13 @@ public class MainActivityTest {
                         isDisplayed()));
         textView.check(matches(withText("Phong's tasks.")));
 
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
+
         ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.button), withText("Add Tasks"),
+                allOf(withId(R.id.button), withText("Add Task"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
@@ -89,6 +113,11 @@ public class MainActivityTest {
                                 1),
                         isDisplayed()));
         appCompatButton2.perform(click());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
 
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.titleEditText),
@@ -99,9 +128,95 @@ public class MainActivityTest {
                                                 1)),
                                 1),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText("testTitle"), closeSoftKeyboard());
+        appCompatEditText.perform(replaceText("T"), closeSoftKeyboard());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
 
         ViewInteraction appCompatEditText2 = onView(
+                allOf(withId(R.id.titleEditText), withText("T"),
+                        childAtPosition(
+                                allOf(withId(R.id.constraintLayout),
+                                        childAtPosition(
+                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                1)),
+                                1),
+                        isDisplayed()));
+        appCompatEditText2.perform(replaceText("Te"));
+
+        ViewInteraction appCompatEditText3 = onView(
+                allOf(withId(R.id.titleEditText), withText("Te"),
+                        childAtPosition(
+                                allOf(withId(R.id.constraintLayout),
+                                        childAtPosition(
+                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                1)),
+                                1),
+                        isDisplayed()));
+        appCompatEditText3.perform(closeSoftKeyboard());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
+
+        ViewInteraction appCompatEditText4 = onView(
+                allOf(withId(R.id.titleEditText), withText("Te"),
+                        childAtPosition(
+                                allOf(withId(R.id.constraintLayout),
+                                        childAtPosition(
+                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                1)),
+                                1),
+                        isDisplayed()));
+        appCompatEditText4.perform(replaceText("Tes"));
+
+        ViewInteraction appCompatEditText5 = onView(
+                allOf(withId(R.id.titleEditText), withText("Tes"),
+                        childAtPosition(
+                                allOf(withId(R.id.constraintLayout),
+                                        childAtPosition(
+                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                1)),
+                                1),
+                        isDisplayed()));
+        appCompatEditText5.perform(closeSoftKeyboard());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
+
+        ViewInteraction appCompatEditText6 = onView(
+                allOf(withId(R.id.titleEditText), withText("Tes"),
+                        childAtPosition(
+                                allOf(withId(R.id.constraintLayout),
+                                        childAtPosition(
+                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                1)),
+                                1),
+                        isDisplayed()));
+        appCompatEditText6.perform(replaceText("Test1"));
+
+        ViewInteraction appCompatEditText7 = onView(
+                allOf(withId(R.id.titleEditText), withText("Test1"),
+                        childAtPosition(
+                                allOf(withId(R.id.constraintLayout),
+                                        childAtPosition(
+                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                1)),
+                                1),
+                        isDisplayed()));
+        appCompatEditText7.perform(closeSoftKeyboard());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
+
+        ViewInteraction appCompatEditText8 = onView(
                 allOf(withId(R.id.desciptEditText),
                         childAtPosition(
                                 allOf(withId(R.id.constraintLayout),
@@ -110,10 +225,15 @@ public class MainActivityTest {
                                                 1)),
                                 3),
                         isDisplayed()));
-        appCompatEditText2.perform(replaceText("testDescription"), closeSoftKeyboard());
+        appCompatEditText8.perform(replaceText("t"), closeSoftKeyboard());
 
-        ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.desciptEditText), withText("testDescription"),
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
+
+        ViewInteraction appCompatEditText9 = onView(
+                allOf(withId(R.id.desciptEditText), withText("t"),
                         childAtPosition(
                                 allOf(withId(R.id.constraintLayout),
                                         childAtPosition(
@@ -121,10 +241,59 @@ public class MainActivityTest {
                                                 1)),
                                 3),
                         isDisplayed()));
-        appCompatEditText3.perform(pressImeActionButton());
+        appCompatEditText9.perform(replaceText("te"));
+
+        ViewInteraction appCompatEditText10 = onView(
+                allOf(withId(R.id.desciptEditText), withText("te"),
+                        childAtPosition(
+                                allOf(withId(R.id.constraintLayout),
+                                        childAtPosition(
+                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                1)),
+                                3),
+                        isDisplayed()));
+        appCompatEditText10.perform(closeSoftKeyboard());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
+
+        ViewInteraction appCompatEditText11 = onView(
+                allOf(withId(R.id.desciptEditText), withText("te"),
+                        childAtPosition(
+                                allOf(withId(R.id.constraintLayout),
+                                        childAtPosition(
+                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                1)),
+                                3),
+                        isDisplayed()));
+        appCompatEditText11.perform(replaceText("test"));
+
+        ViewInteraction appCompatEditText12 = onView(
+                allOf(withId(R.id.desciptEditText), withText("test"),
+                        childAtPosition(
+                                allOf(withId(R.id.constraintLayout),
+                                        childAtPosition(
+                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                1)),
+                                3),
+                        isDisplayed()));
+        appCompatEditText12.perform(closeSoftKeyboard());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
+
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
 
         ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.button), withText("Add Tasks"),
+                allOf(withId(R.id.button), withText("Add Task"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
@@ -133,8 +302,24 @@ public class MainActivityTest {
                         isDisplayed()));
         appCompatButton3.perform(click());
 
-        ViewInteraction textView3 = onView(
-                allOf(withId(R.id.taskTitle), withText("testTitle"),
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
+
+        ViewInteraction linearLayout = onView(
+                allOf(withId(R.id.taskList),
+                        childAtPosition(
+                                allOf(withId(R.id.recyclerView),
+                                        childAtPosition(
+                                                IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class),
+                                                1)),
+                                0),
+                        isDisplayed()));
+        linearLayout.check(matches(isDisplayed()));
+
+        ViewInteraction textView2 = onView(
+                allOf(withId(R.id.taskTitle), withText("Test1"),
                         childAtPosition(
                                 allOf(withId(R.id.taskList),
                                         childAtPosition(
@@ -142,9 +327,9 @@ public class MainActivityTest {
                                                 0)),
                                 0),
                         isDisplayed()));
-        textView3.check(matches(withText("testTitle")));
+        textView2.check(matches(withText("Test1")));
 
-        ViewInteraction textView4 = onView(
+        ViewInteraction textView3 = onView(
                 allOf(withId(R.id.taskState), withText("New"),
                         childAtPosition(
                                 allOf(withId(R.id.taskList),
@@ -153,19 +338,14 @@ public class MainActivityTest {
                                                 0)),
                                 1),
                         isDisplayed()));
-        textView4.check(matches(withText("New")));
+        textView3.check(matches(withText("New")));
 
-        ViewInteraction textView5 = onView(
-                allOf(withId(R.id.userTask), withText("Phong's tasks."),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView5.check(matches(withText("Phong's tasks.")));
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
 
-        ViewInteraction linearLayout = onView(
+
+        ViewInteraction linearLayout2 = onView(
                 allOf(withId(R.id.taskList),
                         childAtPosition(
                                 allOf(withId(R.id.recyclerView),
@@ -174,29 +354,34 @@ public class MainActivityTest {
                                                 4)),
                                 0),
                         isDisplayed()));
-        linearLayout.perform(click());
+        linearLayout2.perform(click());
 
-        ViewInteraction textView6 = onView(
-                allOf(withId(R.id.taskTitle), withText("testTitle"),
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
+
+        ViewInteraction textView4 = onView(
+                allOf(withId(R.id.taskTitle), withText("Test1"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
                                 0),
                         isDisplayed()));
-        textView6.check(matches(withText("testTitle")));
+        textView4.check(matches(withText("Test1")));
 
-        ViewInteraction textView7 = onView(
-                allOf(withId(R.id.taskBody), withText("testDescription"),
+        ViewInteraction textView5 = onView(
+                allOf(withId(R.id.taskBody), withText("test"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
                                 1),
                         isDisplayed()));
-        textView7.check(matches(withText("testDescription")));
+        textView5.check(matches(withText("test")));
 
-        ViewInteraction textView8 = onView(
+        ViewInteraction textView6 = onView(
                 allOf(withId(R.id.taskStatus), withText("New"),
                         childAtPosition(
                                 childAtPosition(
@@ -204,7 +389,12 @@ public class MainActivityTest {
                                         0),
                                 2),
                         isDisplayed()));
-        textView8.check(matches(withText("New")));
+        textView6.check(matches(withText("New")));
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
 
         ViewInteraction appCompatImageButton2 = onView(
                 allOf(withContentDescription("Navigate up"),
@@ -217,6 +407,11 @@ public class MainActivityTest {
                         isDisplayed()));
         appCompatImageButton2.perform(click());
 
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
+
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.button2), withText("All Tasks"),
                         childAtPosition(
@@ -227,6 +422,33 @@ public class MainActivityTest {
                         isDisplayed()));
         appCompatButton4.perform(click());
 
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
+
+        ViewInteraction textView7 = onView(
+                allOf(withId(R.id.taskTitle), withText("Test1"),
+                        childAtPosition(
+                                allOf(withId(R.id.taskList),
+                                        childAtPosition(
+                                                withId(R.id.recyclerView),
+                                                0)),
+                                0),
+                        isDisplayed()));
+        textView7.check(matches(withText("Test1")));
+
+        ViewInteraction textView8 = onView(
+                allOf(withId(R.id.taskState), withText("New"),
+                        childAtPosition(
+                                allOf(withId(R.id.taskList),
+                                        childAtPosition(
+                                                withId(R.id.recyclerView),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        textView8.check(matches(withText("New")));
+
         ViewInteraction textView9 = onView(
                 allOf(withId(R.id.userTask), withText("All Tasks"),
                         childAtPosition(
@@ -236,6 +458,22 @@ public class MainActivityTest {
                                 0),
                         isDisplayed()));
         textView9.check(matches(withText("All Tasks")));
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
+
+        ViewInteraction appCompatImageButton3 = onView(
+                allOf(withContentDescription("Navigate up"),
+                        childAtPosition(
+                                allOf(withId(R.id.action_bar),
+                                        childAtPosition(
+                                                withId(R.id.action_bar_container),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        appCompatImageButton3.perform(click());
     }
 
     private static Matcher<View> childAtPosition(
