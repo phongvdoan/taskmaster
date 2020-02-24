@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -54,6 +55,17 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
 
         getAllTasksFromDynamoDB();
 
+        //connect to AWS
+        awsAppSyncClient = AWSAppSyncClient.builder()
+                .context(getApplicationContext())
+                .awsConfiguration(new AWSConfiguration(getApplicationContext()))
+                .build();
+
+//        this.taskList = taskDatabase.taskDao().getAll();
+
+        //call method to retrieve tasks from AWS
+        taskList = new LinkedList<>();
+        getTasksFromDynamoDB();
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -138,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onResume() {
         super.onResume();

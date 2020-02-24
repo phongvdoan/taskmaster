@@ -36,3 +36,19 @@
 <img src="screenshots/homepage_day4.png" width="200"/>
 <br>
 <img src="screenshots/taskdetail_day4.png" width="200"/>
+
+## Polish
+
+### 20 Feb 2020
+
+- Add RecyclerView to All Task Activity to display all tasks from DB. When clicked on a toast appears with details on the task.
+
+<img src="screenshots/alltaskToast.png" width="200"/>
+
+## Amplify
+
+### 21 Feb 2020
+
+- Initailized amplify to work with app. data is stored on dynamoDB and retrieved from the same.
+
+<img src="screenshots/homepage_day5.png" width="200"/>

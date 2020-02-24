@@ -19,6 +19,10 @@ public class AllTasks extends AppCompatActivity implements MyTaskRecyclerViewAda
     private List<Task> taskList = new LinkedList<>();
     TaskDatabase taskDatabase;
 
+
+    private List<Task> taskList = new LinkedList<>();
+    public TaskDatabase taskDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
