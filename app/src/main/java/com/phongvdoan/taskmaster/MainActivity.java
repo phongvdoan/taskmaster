@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
+        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
 //        this.taskList = taskDatabase.taskDao().getAll();
 
         awsAppSyncClient = AWSAppSyncClient.builder()
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
 
         //call method to retrieve tasks from AWS
         taskList = new LinkedList<>();
-        getTasksFromDynamoDB();
+        getAllTasksFromDynamoDB();
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -174,8 +175,9 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
 
     @Override
     public void onClickOnTaskCallback(Task task) {
-        Log.i(TAG, task.title + "was clicked");
+        Log.i(TAG, task.title + " was clicked");
         Intent taskDetailIntent = new Intent(this, TaskDetail.class);
+        Log.i(TAG, task.dynamoDBId + " was clicked");
         taskDetailIntent.putExtra("id", task.dynamoDBId);
         MainActivity.this.startActivity(taskDetailIntent);
 

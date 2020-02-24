@@ -35,6 +35,8 @@ public class AddTask extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
+        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
+
         awsAppSyncClient = AWSAppSyncClient.builder()
                 .context(getApplicationContext())
                 .awsConfiguration(new AWSConfiguration(getApplicationContext()))
@@ -79,6 +81,7 @@ public class AddTask extends AppCompatActivity {
         public void onResponse(@Nonnull Response<CreateTaskMutation.Data> response) {
             Log.i(TAG, "Added Task");
             String dynamoDBID = response.data().createTask().id();
+            System.out.println("dynamoDBID = " + dynamoDBID);
             String title = response.data().createTask().title();
             String body = response.data().createTask().body();
             Task newTask = new Task(title,body, "New", dynamoDBID);
