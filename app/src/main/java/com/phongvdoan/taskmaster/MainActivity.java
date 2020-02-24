@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
 
     private AWSAppSyncClient awsAppSyncClient;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
