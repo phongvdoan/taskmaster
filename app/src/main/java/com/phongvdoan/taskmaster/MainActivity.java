@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -34,29 +33,25 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.TaskListener {
+public class MainActivity extends AppCompatActivity {
 
-    private String TAG= "pvd.main";
+    private String TAG = "pvd.main";
+
     private List<Task> taskList = new LinkedList<>();
-    TaskDatabase taskDatabase;
 
+    //declare local database
+    private TaskDatabase taskDatabase;
+
+    //declare awsclient
     private AWSAppSyncClient awsAppSyncClient;
 
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //connect to local database
         taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
-//        this.taskList = taskDatabase.taskDao().getAll();
-
-        awsAppSyncClient = AWSAppSyncClient.builder()
-                .context(getApplicationContext())
-                .awsConfiguration(new AWSConfiguration(getApplicationContext()))
-                .build();
-
-        getAllTasksFromDynamoDB();
 
         //connect to AWS
         awsAppSyncClient = AWSAppSyncClient.builder()
@@ -68,16 +63,16 @@ public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.
 
         //call method to retrieve tasks from AWS
         taskList = new LinkedList<>();
-        getAllTasksFromDynamoDB();
+        getTasksFromDynamoDB();
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(this.taskList, MainActivity.this));
+        recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(this.taskList, null, this));
 
         TextView taskTextView = findViewById(R.id.userTask);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String username = sharedPreferences.getString("username", "user");
-        if(username.equals("")){
+        if(username == ""){
             username = "user";
         }
         taskTextView.setText(username + "'s tasks.");
@@ -155,62 +150,42 @@ public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.
 
     @SuppressLint("SetTextI18n")
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onPostResume() {
+        super.onPostResume();
         TextView taskTextView = findViewById(R.id.userTask);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String username = sharedPreferences.getString("username", "user");
         taskTextView.setText(username + "'s tasks.");
-        getAllTasksFromDynamoDB();
 
     }
 
 
     public void sendMessage(View view) {
         Intent intent = new Intent(this, TaskDetail.class);
-        TextView title = findViewById(R.id.taskTitle);
+        TextView title = findViewById(R.id.title);
         String titleString = title.getText().toString();
         intent.putExtra("task", titleString);
         startActivity(intent);
 
     }
 
-    @Override
-    public void onClickOnTaskCallback(Task task) {
-        Log.i(TAG, task.title + " was clicked");
-        Intent taskDetailIntent = new Intent(this, TaskDetail.class);
-        Log.i(TAG, task.dynamoDBId + " was clicked");
-        taskDetailIntent.putExtra("id", task.dynamoDBId);
-        MainActivity.this.startActivity(taskDetailIntent);
-
-    }
-
-    public void getAllTasksFromDynamoDB(){
+    public void getTasksFromDynamoDB(){
         awsAppSyncClient.query(ListTasksQuery.builder().build())
                 .responseFetcher(AppSyncResponseFetchers.CACHE_AND_NETWORK)
-                .enqueue(todosCallback);
+                .enqueue(getTasksFromDynamoDBCallback);
     }
 
-    private GraphQLCall.Callback<ListTasksQuery.Data> todosCallback = new GraphQLCall.Callback<ListTasksQuery.Data>() {
+    private GraphQLCall.Callback<ListTasksQuery.Data> getTasksFromDynamoDBCallback = new GraphQLCall.Callback<ListTasksQuery.Data>() {
         @Override
         public void onResponse(@Nonnull Response<ListTasksQuery.Data> response) {
             Log.i(TAG, response.data().listTasks().items().toString());
-            if (taskList.size() == 0 || response.data().listTasks().items().size() != taskList.size()) {
-                taskList.clear();
+
+            if(taskList.size() == 0 || response.data().listTasks().items().size() != taskList.size()) {
+               taskList.clear();
                 for (ListTasksQuery.Item item : response.data().listTasks().items()) {
                     Task retrievedTask = new Task(item.title(), item.body(), item.state(), item.id());
                     taskList.add(retrievedTask);
                 }
-                Handler handlerForMainThread = new Handler(Looper.getMainLooper()) {
-                    @Override
-                    public void handleMessage(@NonNull Message msg) {
-                        super.handleMessage(msg);
-                        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-                        recyclerView.getAdapter().notifyDataSetChanged();
-                    }
-                };
-
-                handlerForMainThread.obtainMessage().sendToTarget();
 
             }
         }
@@ -220,4 +195,5 @@ public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.
             Log.e(TAG, e.toString());
         }
     };
+
 }
