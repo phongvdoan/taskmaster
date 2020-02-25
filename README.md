@@ -1,5 +1,7 @@
 # TaskMaster
 
+[To Run](app/build/generated/source/appsync/generatedIR/release)
+
 ## Start TaskMaster
 
 ### 11 Feb 2020
