@@ -30,10 +30,8 @@ import javax.annotation.Nonnull;
 
 public class TaskDetail extends AppCompatActivity {
 
-    private String TAG = "pvd.taskdetail";
-
-    //declare local db var
-    public TaskDatabase taskDatabase;
+    private String TAG = "pvd.taskDetail";
+    TaskDatabase taskDatabase;
 
     List<Task> taskList = new LinkedList<>();
 
@@ -53,7 +51,7 @@ public class TaskDetail extends AppCompatActivity {
         super.onStart();
         Log.i(TAG, "Started");
         //connect to local DB
-//        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
+        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
 
         //connect to AWS
         awsAppSyncClient = AWSAppSyncClient.builder()
@@ -63,17 +61,20 @@ public class TaskDetail extends AppCompatActivity {
 
 //        getTasksFromDynamoDB();
 
-//        String id = getIntent().getStringExtra("id");
-        String title = getIntent().getStringExtra("title");
-        String body = getIntent().getStringExtra("body");
-        String state = getIntent().getStringExtra("state");
+////        String id = getIntent().getStringExtra("id");
+//        String title = getIntent().getStringExtra("title");
+//        String body = getIntent().getStringExtra("body");
+//        String state = getIntent().getStringExtra("state");
 
+        String id = getIntent().getStringExtra("id");
+        Log.i(TAG, id + " was clicked");
+        Task oneTask = taskDatabase.taskDao().getOne(id);
         TextView taskTextVeiw = findViewById(R.id.taskTitle);
-        taskTextVeiw.setText(title);
+        taskTextVeiw.setText(oneTask.title);
         TextView desciptTextVeiw = findViewById(R.id.taskBody);
-        desciptTextVeiw.setText(body);
+        desciptTextVeiw.setText(oneTask.body);
         TextView statusTextVeiw = findViewById(R.id.taskStatus);
-        statusTextVeiw.setText(state);
+        statusTextVeiw.setText(oneTask.state);
 
 //        System.out.println(id);
 //

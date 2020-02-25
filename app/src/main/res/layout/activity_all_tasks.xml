@@ -22,23 +22,16 @@
         app:layout_constraintVertical_bias="0.08" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView2"
-        android:layout_width="406dp"
-        android:layout_height="416dp"
+        android:id="@+id/recyclerView"
+        android:layout_width="405dp"
+        android:layout_height="298dp"
+        android:layout_marginTop="124dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userTask"
-        app:layout_constraintVertical_bias="0.248" />
+        app:layout_constraintVertical_bias="0.0">
 
-    <fragment
-        android:id="@+id/fragment2"
-        android:name="com.phongvdoan.taskmaster.TaskFragment"
-        android:layout_width="212dp"
-        android:layout_height="295dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/recyclerView2" />
+    </androidx.recyclerview.widget.RecyclerView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

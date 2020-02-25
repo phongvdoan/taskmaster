@@ -25,10 +25,9 @@ import type.CreateTaskInput;
 
 public class AddTask extends AppCompatActivity {
 
-    private String TAG = "pvd.addTask";
-    //Local Database variable
-//    TaskDatabase taskDatabase;
-    //AWS Database
+    private String TAG= "pvd.addTask";
+
+    TaskDatabase taskDatabase;
     private AWSAppSyncClient awsAppSyncClient;
 
     @Override
@@ -36,10 +35,8 @@ public class AddTask extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
-        //connect to local database
-//        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
+        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
 
-        //connect to AWS
         awsAppSyncClient = AWSAppSyncClient.builder()
                 .context(getApplicationContext())
                 .awsConfiguration(new AWSConfiguration(getApplicationContext()))
@@ -55,38 +52,42 @@ public class AddTask extends AppCompatActivity {
                 EditText descriptEditText = findViewById(R.id.desciptEditText);
                 String newDescription = descriptEditText.getText().toString();
 
-                //Save to DynamoDB on AWS
-                addTaskToDynamoDB(newTitle, newDescription, "New");
 
-                //Save to Local Database
-//                Task newTask = new Task(newTitle,newDescription, "New");
-//                taskDatabase.taskDao().save(newTask);
+                addOneTaskToDynamoDB(newTitle, newDescription);
 
                 //Toasts
                 Toast submitToast = Toast.makeText(getApplicationContext(), "Submitted!", Toast.LENGTH_SHORT);
                 submitToast.show();
-//                Intent gotToMainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-//                startActivity(gotToMainActivityIntent);
+//                Intent gotToMainActivityIntent = new Intent(AddTask.this, MainActivity.class);
+//                AddTask.this.startActivity(gotToMainActivityIntent);
 
             }
         });
     }
 
-    public void addTaskToDynamoDB(String title, String body, String state){
-         CreateTaskInput createTaskInput = CreateTaskInput.builder()
-                .title(title)
-                .body(body)
-                .state(state)
-                .build();
+    public void addOneTaskToDynamoDB(String title, String body){
+        CreateTaskInput createTaskInput = CreateTaskInput.builder().
+                title(title).
+                body(body).
+                state("New").
+                build();
 
         awsAppSyncClient.mutate(CreateTaskMutation.builder().input(createTaskInput).build())
-                .enqueue(addToAWSDBCallback);
+                .enqueue(mutationCallback);
     }
 
-    private GraphQLCall.Callback<CreateTaskMutation.Data> addToAWSDBCallback = new GraphQLCall.Callback<CreateTaskMutation.Data>() {
+    private GraphQLCall.Callback<CreateTaskMutation.Data> mutationCallback = new GraphQLCall.Callback<CreateTaskMutation.Data>() {
         @Override
         public void onResponse(@Nonnull Response<CreateTaskMutation.Data> response) {
             Log.i(TAG, "Added Task");
+            String dynamoDBID = response.data().createTask().id();
+            System.out.println("dynamoDBID = " + dynamoDBID);
+            String title = response.data().createTask().title();
+            String body = response.data().createTask().body();
+            Task newTask = new Task(title,body, "New", dynamoDBID);
+            taskDatabase.taskDao().save(newTask);
+            Intent gotToMainActivityIntent = new Intent(AddTask.this, MainActivity.class);
+            AddTask.this.startActivity(gotToMainActivityIntent);
         }
 
         @Override

@@ -13,10 +13,13 @@ public interface TaskDao {
     @Query("SELECT * FROM task ORDER BY id DESC")
      List<Task> getAll();
 
-    @Query("SELECT * FROM task WHERE id= :id")
-     Task getOne(String id);
+    @Query("SELECT * FROM task WHERE dynamoDBId = :dynamoDBId")
+     Task getOne(String dynamoDBId);
 
     @Insert
      void save(Task task);
+
+    @Delete
+    void delete(Task task);
 
 }
