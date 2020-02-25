@@ -49,7 +49,7 @@
 
 ### 21 Feb 2020
 
-- Initailized amplify to work with app. data is stored on dynamoDB and retrieved from the same.
+- Initialized amplify to work with app. data is stored on dynamoDB and retrieved from the same.
 
 <img src="screenshots/homepage_day5.png" width="200"/>
 
@@ -57,7 +57,7 @@
 
 ### 25 Feb 2020
 
-- Initailized cognito to work with app. User can signup, login, and sign out
+- Initialized Cognito to work with app. User can signup, login, and sign out
 
 <img src="screenshots/login.png" width="200"/>
 <br>
