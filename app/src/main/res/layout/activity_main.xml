@@ -70,14 +70,4 @@
         app:layout_constraintTop_toBottomOf="@+id/userTask"
         app:layout_constraintVertical_bias="0.0" />
 
-    <fragment
-        android:id="@+id/fragment"
-        android:name="com.phongvdoan.taskmaster.TaskFragment"
-        android:layout_width="233dp"
-        android:layout_height="300dp"
-        app:layout_constraintEnd_toEndOf="@id/recyclerView"
-        app:layout_constraintStart_toStartOf="@id/recyclerView"
-        app:layout_constraintTop_toTopOf="@+id/recyclerView"
-        tools:layout="@layout/fragment_task_list" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
