@@ -22,6 +22,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.amazonaws.amplify.generated.graphql.ListTasksQuery;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.SignOutOptions;
+import com.amazonaws.mobile.client.UserStateDetails;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
 import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
@@ -33,6 +37,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+
+import static com.amazonaws.mobile.client.UserState.SIGNED_IN;
+import static com.amazonaws.mobile.client.UserState.SIGNED_OUT;
 
 public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.TaskListener {
 
@@ -48,15 +55,45 @@ public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        AWSMobileClient.getInstance().initialize(getApplicationContext(), new Callback<UserStateDetails>() {
+
+                    @Override
+                    public void onResult(final UserStateDetails userStateDetails) {
+                        Log.i("INIT", "onResult: " + userStateDetails.getUserState());
+                        if(userStateDetails.getUserState() == SIGNED_OUT){
+                            // 'this' refers the the current active activity
+                            AWSMobileClient.getInstance().showSignIn(MainActivity.this, new Callback<UserStateDetails>() {
+                                @Override
+                                public void onResult(UserStateDetails result) {
+                                    Log.d(TAG, "onResult: " + result.getUserState());
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    Log.e(TAG, "onError: ", e);
+                                }
+                            });
+                        }
+//                        if(userStateDetails.getUserState() == SIGNED_IN) {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    TextView taskTextView = findViewById(R.id.userTask);
+//                                    taskTextView.setText(userStateDetails.getDetails().get(). + "'s tasks.");
+//                                }
+//                            });
+//                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("INIT", "Initialization error.", e);
+                    }
+                }
+        );
+
         taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
 //        this.taskList = taskDatabase.taskDao().getAll();
-
-        awsAppSyncClient = AWSAppSyncClient.builder()
-                .context(getApplicationContext())
-                .awsConfiguration(new AWSConfiguration(getApplicationContext()))
-                .build();
-
-        getAllTasksFromDynamoDB();
 
         //connect to AWS
         awsAppSyncClient = AWSAppSyncClient.builder()
@@ -75,12 +112,34 @@ public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.
         recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(this.taskList, MainActivity.this));
 
         TextView taskTextView = findViewById(R.id.userTask);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String username = sharedPreferences.getString("username", "user");
-        if(username.equals("")){
-            username = "user";
-        }
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String username = AWSMobileClient.getInstance().getUsername();
+        System.out.println(username);
+//        if(username.equals("")){
+//            username = "user";
+//        }
         taskTextView.setText(username + "'s tasks.");
+
+        Button signOutButton = findViewById(R.id.signOut);
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AWSMobileClient.getInstance().signOut(SignOutOptions.builder().signOutGlobally(true).build(), new Callback<Void>() {
+                    @Override
+                    public void onResult(final Void result) {
+                        Log.d(TAG, "signed-out");
+                        Intent mainIntent = new Intent(MainActivity.this, MainActivity.class);
+                        MainActivity.this.startActivity(mainIntent);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e(TAG, "sign-out error", e);
+                    }
+                });
+            }
+        });
 
         Button addTaskButton = findViewById(R.id.button);
         addTaskButton.setOnClickListener(new View.OnClickListener() {
@@ -158,8 +217,12 @@ public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.
     protected void onResume() {
         super.onResume();
         TextView taskTextView = findViewById(R.id.userTask);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String username = sharedPreferences.getString("username", "user");
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String username = AWSMobileClient.getInstance().getUsername();
+        System.out.println("username = " + username);
+//        if(username.equals("")){
+//            username = "user";
+//        }
         taskTextView.setText(username + "'s tasks.");
         getAllTasksFromDynamoDB();
 

@@ -1,5 +1,7 @@
 # TaskMaster
 
+[To Run](app/build/generated/source/appsync/generatedIR/release)
+
 ## Start TaskMaster
 
 ### 11 Feb 2020
@@ -49,6 +51,16 @@
 
 ### 21 Feb 2020
 
-- Initailized amplify to work with app. data is stored on dynamoDB and retrieved from the same.
+- Initialized amplify to work with app. data is stored on dynamoDB and retrieved from the same.
 
 <img src="screenshots/homepage_day5.png" width="200"/>
+
+## Cognito
+
+### 25 Feb 2020
+
+- Initialized Cognito to work with app. User can signup, login, and sign out
+
+<img src="screenshots/login.png" width="200"/>
+<br>
+<img src="screenshots/homepage_day6.png" width="200"/>
