@@ -1,72 +1,95 @@
 package com.phongvdoan.taskmaster;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.recyclerview.widget.RecyclerView;
+import com.phongvdoan.taskmaster.TaskFragment.OnListFragmentInteractionListener;
 
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Task} and makes a call to the
- * specified {@link TaskListener}.
+ * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecyclerViewAdapter.TasksViewHolder> {
+public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Task> tasks;
-    private final TaskListener listener;
+    private final List<Task> mValues;
+    private final OnListFragmentInteractionListener mListener;
+    private final Context mContext;
 
-    public MyTaskRecyclerViewAdapter(List<Task> tasks, TaskListener listener) {
-        this.tasks = tasks;
-        this.listener = listener;
+    public MyTaskRecyclerViewAdapter(List<Task> items, OnListFragmentInteractionListener listener, Context context) {
+        mValues = items;
+        mListener = listener;
+        mContext = context;
     }
 
     @Override
-    public TasksViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_task, parent, false);
-
-        final TasksViewHolder tasksViewHolder = new TasksViewHolder(view);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onClickOnTaskCallback(tasksViewHolder.task);
-            }
-        });
-        return tasksViewHolder;
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final TasksViewHolder holder, final int position) {
-        holder.task = tasks.get(position);
-        holder.taskTitleView.setText(tasks.get(position).title);
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        holder.mItem = mValues.get(position);
+        holder.mTitleView.setText(mValues.get(position).title);
 //        holder.mBodyView.setText(mValues.get(position).body);
-        holder.taskStatusView.setText(tasks.get(position).state);
+        holder.mStatusView.setText(mValues.get(position).state);
 
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    Context context = v.getContext();
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected
+                // https://stackoverflow.com/questions/21453254/determine-if-context-is-a-specific-activity
+                    if(mContext.getClass() == MainActivity.class){
+                        Intent taskDetail = new Intent(mContext, TaskDetail.class);
+                        System.out.println("holder = " + holder.mItem.id);
+                        taskDetail.putExtra("id", holder.mItem.dynamoDBID);
+                        taskDetail.putExtra("title", holder.mItem.title);
+                        taskDetail.putExtra("body", holder.mItem.body);
+                        taskDetail.putExtra("state", holder.mItem.state);
+
+//                    taskDetail.putExtra("description", mValues.get(position).body);
+//                    taskDetail.putExtra("status", mValues.get(position).state);
+                    context.startActivity(taskDetail);
+                    } else {
+                        String stringForToast = String.format("%s %s %s", holder.mItem.title, holder.mItem.body, holder.mItem.state);
+                        Toast saveToast = Toast.makeText(mContext, stringForToast, Toast.LENGTH_SHORT);
+                        saveToast.show();
+                    }
+                }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return tasks.size();
+        return mValues.size();
     }
 
-    public class TasksViewHolder extends RecyclerView.ViewHolder {
-        public final View view;
-        public final TextView taskTitleView;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public final View mView;
+        public final TextView mTitleView;
 //        public final TextView mBodyView;
-        public final TextView taskStatusView;
-        public Task task;
+        public final TextView mStatusView;
+        public Task mItem;
 
-        public TasksViewHolder(View v) {
-            super(v);
-            view = v;
-            taskTitleView = (TextView) view.findViewById(R.id.taskTitle);
+        public ViewHolder(View view) {
+            super(view);
+            mView = view;
+            mTitleView = (TextView) view.findViewById(R.id.title);
 //            mBodyView = (TextView) view.findViewById(R.id.content);
-            taskStatusView = (TextView) view.findViewById(R.id.taskState);
+            mStatusView = (TextView) view.findViewById(R.id.status);
         }
 
 
@@ -74,13 +97,9 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
 
         @Override
         public String toString() {
-            return super.toString() + " '" + taskTitleView.getText() + "'";
+            return super.toString() + " '" + mTitleView.getText() + "'";
         }
 
-    }
-
-    public interface TaskListener{
-        void onClickOnTaskCallback(Task task);
     }
 
 }
