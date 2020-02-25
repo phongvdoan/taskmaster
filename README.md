@@ -1,6 +1,6 @@
 # TaskMaster
 
-[To Run](app/build/generated/source/appsync/generatedIR/release)
+[To Run](/app/build/generated/source/appsync/generatedIR/release)
 
 ## Start TaskMaster
 
