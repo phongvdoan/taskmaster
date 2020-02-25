@@ -1,6 +1,6 @@
 # TaskMaster
 
-[To Run](apk/)
+[To Get APKs](apk/)
 
 ## Start TaskMaster
 
