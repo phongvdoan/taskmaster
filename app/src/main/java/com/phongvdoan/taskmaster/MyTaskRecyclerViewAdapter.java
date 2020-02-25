@@ -18,7 +18,7 @@ import java.util.List;
 public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecyclerViewAdapter.TasksViewHolder> {
 
     private final List<Task> tasks;
-    final TaskListener listener;
+    private final TaskListener listener;
 
     public MyTaskRecyclerViewAdapter(List<Task> tasks, TaskListener listener) {
         this.tasks = tasks;

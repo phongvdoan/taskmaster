@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -33,7 +34,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class MainActivity extends AppCompatActivity implements MyTaskRecyclerViewAdapter.TaskListener {
+public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.TaskListener {
 
     private String TAG= "pvd.main";
     private List<Task> taskList = new LinkedList<>();
