@@ -64,3 +64,13 @@
 <img src="screenshots/login.png" width="200"/>
 <br>
 <img src="screenshots/homepage_day6.png" width="200"/>
+
+## Cognito
+
+### 26-27 Feb 2020
+
+- User can upload task image to S3 and display on the task detail page.
+
+<img src="screenshots/addtask-s3.png" width="200"/>
+<br>
+<img src="screenshots/taskdetail-s3.png" width="200"/>

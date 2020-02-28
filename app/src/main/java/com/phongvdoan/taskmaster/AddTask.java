@@ -141,6 +141,7 @@ public class AddTask extends AppCompatActivity {
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         String picturePath = cursor.getString(columnIndex);
         cursor.close();
+
         TransferUtility transferUtility =
                 TransferUtility.builder()
                         .context(getApplicationContext())
@@ -158,6 +159,7 @@ public class AddTask extends AppCompatActivity {
         uuid = UUID.randomUUID().toString();
         TransferObserver uploadObserver =
                 transferUtility.upload(
+                        "taskmasterb8b8d3a388424cb587c7f95d04e007f5185518-todo",
                         "public/" + uuid,
                         new File(picturePath));
 

@@ -1,35 +1,19 @@
 package com.phongvdoan.taskmaster;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
-
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amazonaws.amplify.generated.graphql.ListTasksQuery;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
+
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
-import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
-import com.apollographql.apollo.GraphQLCall;
-import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.exception.ApolloException;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.prefs.PreferenceChangeEvent;
-
-import javax.annotation.Nonnull;
 
 public class TaskDetail extends AppCompatActivity {
 

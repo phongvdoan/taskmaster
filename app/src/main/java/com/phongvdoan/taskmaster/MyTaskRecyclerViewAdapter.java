@@ -64,9 +64,9 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
         public TasksViewHolder(View v) {
             super(v);
             view = v;
-            taskTitleView = (TextView) view.findViewById(R.id.taskTitle);
+            taskTitleView = view.findViewById(R.id.taskTitle);
 //            mBodyView = (TextView) view.findViewById(R.id.content);
-            taskStatusView = (TextView) view.findViewById(R.id.taskState);
+            taskStatusView = view.findViewById(R.id.taskState);
         }
 
 
