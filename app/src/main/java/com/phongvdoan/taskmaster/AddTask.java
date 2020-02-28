@@ -52,6 +52,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import type.CreateTaskInput;
+import type.UpdateTaskInput;
 
 public class AddTask extends AppCompatActivity {
 
@@ -61,6 +62,7 @@ public class AddTask extends AppCompatActivity {
     private AWSAppSyncClient awsAppSyncClient;
 
     ImageView file;
+    String uuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +88,7 @@ public class AddTask extends AppCompatActivity {
         String newDescription = descriptEditText.getText().toString();
 
 
-        addOneTaskToDynamoDB(newTitle, newDescription, "blank");
+        addOneTaskToDynamoDB(newTitle, newDescription, "public/" + uuid);
 
         //Toasts
         Toast submitToast = Toast.makeText(getApplicationContext(), "Submitted!", Toast.LENGTH_SHORT);
@@ -153,7 +155,7 @@ public class AddTask extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
-        String uuid = UUID.randomUUID().toString();
+        uuid = UUID.randomUUID().toString();
         TransferObserver uploadObserver =
                 transferUtility.upload(
                         "public/" + uuid,
@@ -166,6 +168,7 @@ public class AddTask extends AppCompatActivity {
             public void onStateChanged(int id, TransferState state) {
                 if (TransferState.COMPLETED == state) {
                     // Handle a completed upload.
+
                 }
             }
 
