@@ -29,6 +29,7 @@ import com.amazonaws.mobile.client.UserStateDetails;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
 import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferService;
 import com.apollographql.apollo.GraphQLCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
@@ -54,6 +55,8 @@ public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getApplicationContext().startService(new Intent(getApplicationContext(), TransferService.class));
 
         AWSMobileClient.getInstance().initialize(getApplicationContext(), new Callback<UserStateDetails>() {
 
@@ -114,10 +117,16 @@ public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.
         TextView taskTextView = findViewById(R.id.userTask);
 //        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String username = AWSMobileClient.getInstance().getUsername();
-        System.out.println(username);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", username);
+        editor.apply();
 //        if(username.equals("")){
 //            username = "user";
 //        }
+        if (username == null){
+            username = sharedPreferences.getString("username", "User");
+        }
         taskTextView.setText(username + "'s tasks.");
 
         Button signOutButton = findViewById(R.id.signOut);
@@ -219,24 +228,30 @@ public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.
         TextView taskTextView = findViewById(R.id.userTask);
 //        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String username = AWSMobileClient.getInstance().getUsername();
-        System.out.println("username = " + username);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", username);
+        editor.apply();
 //        if(username.equals("")){
 //            username = "user";
 //        }
+        if (username == null){
+            username = sharedPreferences.getString("username", "User");
+        }
         taskTextView.setText(username + "'s tasks.");
         getAllTasksFromDynamoDB();
 
     }
 
 
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, TaskDetail.class);
-        TextView title = findViewById(R.id.taskTitle);
-        String titleString = title.getText().toString();
-        intent.putExtra("task", titleString);
-        startActivity(intent);
-
-    }
+//    public void sendMessage(View view) {
+//        Intent intent = new Intent(this, TaskDetail.class);
+//        TextView title = findViewById(R.id.taskTitle);
+//        String titleString = title.getText().toString();
+//        intent.putExtra("task", titleString);
+//        startActivity(intent);
+//
+//    }
 
     @Override
     public void onClickOnTaskCallback(Task task) {
@@ -261,7 +276,7 @@ public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.
             if (taskList.size() == 0 || response.data().listTasks().items().size() != taskList.size()) {
                 taskList.clear();
                 for (ListTasksQuery.Item item : response.data().listTasks().items()) {
-                    Task retrievedTask = new Task(item.title(), item.body(), item.state(), item.id());
+                    Task retrievedTask = new Task(item.title(), item.body(), item.state(), item.id(), item.uri());
                     taskList.add(retrievedTask);
                 }
                 Handler handlerForMainThread = new Handler(Looper.getMainLooper()) {

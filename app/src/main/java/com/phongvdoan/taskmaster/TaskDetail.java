@@ -1,32 +1,19 @@
 package com.phongvdoan.taskmaster;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
-
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amazonaws.amplify.generated.graphql.ListTasksQuery;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
+
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
-import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
-import com.apollographql.apollo.GraphQLCall;
-import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.exception.ApolloException;
+import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.prefs.PreferenceChangeEvent;
-
-import javax.annotation.Nonnull;
 
 public class TaskDetail extends AppCompatActivity {
 
@@ -75,6 +62,15 @@ public class TaskDetail extends AppCompatActivity {
         desciptTextVeiw.setText(oneTask.body);
         TextView statusTextVeiw = findViewById(R.id.taskStatus);
         statusTextVeiw.setText(oneTask.state);
+        ImageView imageView = findViewById(R.id.taskImage);
+        String url = "https://taskmasterb8b8d3a388424cb587c7f95d04e007f5185518-todo.s3-us-west-2.amazonaws.com/" + oneTask.uri;
+//        imageView.setImageURI(Uri.parse(url));
+        Picasso.get()
+                .load(url)
+                .resize(50, 50)
+                .centerCrop()
+                .into(imageView);
+
 
 //        System.out.println(id);
 //
@@ -126,4 +122,6 @@ public class TaskDetail extends AppCompatActivity {
 //            Log.e(TAG, e.toString());
 //        }
 //    };
+
+
 }
