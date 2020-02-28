@@ -244,14 +244,14 @@ public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.
     }
 
 
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, TaskDetail.class);
-        TextView title = findViewById(R.id.taskTitle);
-        String titleString = title.getText().toString();
-        intent.putExtra("task", titleString);
-        startActivity(intent);
-
-    }
+//    public void sendMessage(View view) {
+//        Intent intent = new Intent(this, TaskDetail.class);
+//        TextView title = findViewById(R.id.taskTitle);
+//        String titleString = title.getText().toString();
+//        intent.putExtra("task", titleString);
+//        startActivity(intent);
+//
+//    }
 
     @Override
     public void onClickOnTaskCallback(Task task) {
@@ -276,7 +276,7 @@ public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.
             if (taskList.size() == 0 || response.data().listTasks().items().size() != taskList.size()) {
                 taskList.clear();
                 for (ListTasksQuery.Item item : response.data().listTasks().items()) {
-                    Task retrievedTask = new Task(item.title(), item.body(), item.state(), item.id());
+                    Task retrievedTask = new Task(item.title(), item.body(), item.state(), item.id(), item.uri());
                     taskList.add(retrievedTask);
                 }
                 Handler handlerForMainThread = new Handler(Looper.getMainLooper()) {

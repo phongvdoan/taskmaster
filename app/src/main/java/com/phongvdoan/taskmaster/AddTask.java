@@ -1,10 +1,24 @@
 package com.phongvdoan.taskmaster;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.room.Room;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,7 +36,10 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferService;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.apollographql.apollo.GraphQLCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
@@ -30,6 +47,7 @@ import com.apollographql.apollo.exception.ApolloException;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -37,7 +55,7 @@ import type.CreateTaskInput;
 
 public class AddTask extends AppCompatActivity {
 
-    private String TAG= "pvd.addTask";
+    private String TAG = "pvd.addTask";
 
     TaskDatabase taskDatabase;
     private AWSAppSyncClient awsAppSyncClient;
@@ -56,47 +74,34 @@ public class AddTask extends AppCompatActivity {
                 .awsConfiguration(new AWSConfiguration(getApplicationContext()))
                 .build();
 
-        Button attachFileButton = findViewById(R.id.attachFileButton);
         file = findViewById(R.id.imageUpload);
-        attachFileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent grabFileIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                grabFileIntent.setType("file/*");
-                startActivity(grabFileIntent);
-            }
-        });
+
+    }
+    public void submit(View v) {
+
+        EditText titleEditText = findViewById(R.id.titleEditText);
+        String newTitle = titleEditText.getText().toString();
+        System.out.println("newtitle" +newTitle);
+        EditText descriptEditText = findViewById(R.id.desciptEditText);
+        String newDescription = descriptEditText.getText().toString();
 
 
+        addOneTaskToDynamoDB(newTitle, newDescription, "blank");
 
-        Button submitButton = findViewById(R.id.button);
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                EditText titleEditText = findViewById(R.id.titleEditText);
-                String newTitle = titleEditText.getText().toString();
-                EditText descriptEditText = findViewById(R.id.desciptEditText);
-                String newDescription = descriptEditText.getText().toString();
-
-
-                addOneTaskToDynamoDB(newTitle, newDescription);
-
-                //Toasts
-                Toast submitToast = Toast.makeText(getApplicationContext(), "Submitted!", Toast.LENGTH_SHORT);
-                submitToast.show();
+        //Toasts
+        Toast submitToast = Toast.makeText(getApplicationContext(), "Submitted!", Toast.LENGTH_SHORT);
+        submitToast.show();
 //                Intent gotToMainActivityIntent = new Intent(AddTask.this, MainActivity.class);
 //                AddTask.this.startActivity(gotToMainActivityIntent);
 
-            }
-        });
     }
 
-    public void addOneTaskToDynamoDB(String title, String body){
+    public void addOneTaskToDynamoDB(String title, String body, String uri) {
         CreateTaskInput createTaskInput = CreateTaskInput.builder().
                 title(title).
                 body(body).
                 state("New").
+                uri(uri).
                 build();
 
         awsAppSyncClient.mutate(CreateTaskMutation.builder().input(createTaskInput).build())
@@ -111,7 +116,8 @@ public class AddTask extends AppCompatActivity {
             System.out.println("dynamoDBID = " + dynamoDBID);
             String title = response.data().createTask().title();
             String body = response.data().createTask().body();
-            Task newTask = new Task(title,body, "New", dynamoDBID);
+            String uri = response.data().createTask().uri();
+            Task newTask = new Task(title, body, "New", dynamoDBID, uri);
             taskDatabase.taskDao().save(newTask);
             Intent gotToMainActivityIntent = new Intent(AddTask.this, MainActivity.class);
             AddTask.this.startActivity(gotToMainActivityIntent);
@@ -123,29 +129,35 @@ public class AddTask extends AppCompatActivity {
         }
     };
 
-    public void uploadWithTransferUtility() {
+    public void uploadWithTransferUtility(Uri uri) {
 
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri,
+                filePathColumn, null, null, null);
+        assert cursor != null;
+        cursor.moveToFirst();
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String picturePath = cursor.getString(columnIndex);
+        cursor.close();
         TransferUtility transferUtility =
                 TransferUtility.builder()
                         .context(getApplicationContext())
                         .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
-                        .s3Client(new AmazonS3Client(AWSMobileClient.getInstance()))
+                        .s3Client(new AmazonS3Client(AWSMobileClient.getInstance(), Region.getRegion(Regions.EU_WEST_2)))
                         .build();
 
         File file = new File(getApplicationContext().getFilesDir(), "sample.txt");
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.append("Howdy World!");
             writer.close();
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
-
+        String uuid = UUID.randomUUID().toString();
         TransferObserver uploadObserver =
                 transferUtility.upload(
-                        "public/sample.txt",
-                        new File(getApplicationContext().getFilesDir(),"sample.txt"));
+                        "public/" + uuid,
+                        new File(picturePath));
 
         // Attach a listener to the observer to get state update and progress notifications
         uploadObserver.setTransferListener(new TransferListener() {
@@ -160,7 +172,7 @@ public class AddTask extends AppCompatActivity {
             @Override
             public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
                 float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                int percentDone = (int)percentDonef;
+                int percentDone = (int) percentDonef;
 
                 Log.d(TAG, "ID:" + id + " bytesCurrent: " + bytesCurrent
                         + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
@@ -181,6 +193,50 @@ public class AddTask extends AppCompatActivity {
 
         Log.d(TAG, "Bytes Transferred: " + uploadObserver.getBytesTransferred());
         Log.d(TAG, "Bytes Total: " + uploadObserver.getBytesTotal());
+    }
+
+    @SuppressLint("IntentReset")
+    public void addImage(View v){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+        } else {
+            Intent grabFileIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            grabFileIntent.setType("image/*");
+//                grabFileIntent.putExtra(DocumentsContract.EXTRA_INITIAL_URI,);
+            startActivityForResult(grabFileIntent, 999);
+        }
+    }
+
+    @SuppressLint("IntentReset")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode != 0) {
+            return;
+        }
+        if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Intent grabFileIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            grabFileIntent.setType("image/*");
+//                grabFileIntent.putExtra(DocumentsContract.EXTRA_INITIAL_URI,);
+            startActivityForResult(grabFileIntent, 999);
+        }
+    }
+
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == 999) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                // Get the URI that points to the selected contact
+                Uri imageURI = intent.getData();
+
+                file.setImageURI(imageURI);
+                uploadWithTransferUtility(imageURI);
+            }
+        }
     }
 }
 
