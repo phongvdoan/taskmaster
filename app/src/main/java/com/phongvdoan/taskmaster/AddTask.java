@@ -7,6 +7,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -104,6 +107,7 @@ public class AddTask extends AppCompatActivity {
         @Override
         public void onResponse(@Nonnull Response<CreateTaskMutation.Data> response) {
             Log.i(TAG, "Added Task");
+            Handler handler = new Handler(Looper.getMainLooper());
             String dynamoDBID = response.data().createTask().id();
             System.out.println("dynamoDBID = " + dynamoDBID);
             String title = response.data().createTask().title();
