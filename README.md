@@ -65,7 +65,7 @@
 <br>
 <img src="screenshots/homepage_day6.png" width="200"/>
 
-## Cognito
+## S3
 
 ### 26-27 Feb 2020
 
@@ -74,3 +74,13 @@
 <img src="screenshots/addtask-s3.png" width="200"/>
 <br>
 <img src="screenshots/taskdetail-s3.png" width="200"/>
+
+## Push Notification
+
+### 2 Mar 2020
+
+- User can be sent Push Notifications using Pinpoint
+
+<img src="screenshots/pushnotification.png" width="200"/>
+
+
