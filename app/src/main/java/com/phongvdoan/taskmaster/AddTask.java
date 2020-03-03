@@ -139,17 +139,10 @@ public class AddTask extends AppCompatActivity {
                         .s3Client(new AmazonS3Client(AWSMobileClient.getInstance(), Region.getRegion(Regions.EU_WEST_2)))
                         .build();
 
-        File file = new File(getApplicationContext().getFilesDir(), "sample.txt");
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.close();
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
         uuid = UUID.randomUUID().toString();
         TransferObserver uploadObserver =
                 transferUtility.upload(
-                        "taskmasterb8b8d3a388424cb587c7f95d04e007f5185518-todo",
+                        "taskmaster879d0b8cad184fecbff2609a8bf14c8c210659-todo",
                         "public/" + uuid,
                         new File(picturePath));
 

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "93817794564",
+    "firebase_url": "https://taskmaster-phong.firebaseio.com",
+    "project_id": "taskmaster-phong",
+    "storage_bucket": "taskmaster-phong.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:93817794564:android:71a584fa726afd8e824551",
+        "android_client_info": {
+          "package_name": "com.phongvdoan.taskmaster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "93817794564-dagoskvjofq1s2de1cvphf3hiabpemtr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.phongvdoan.taskmaster",
+            "certificate_hash": "582e5ed0a847f2a8be9ff15c5bac140a169aebd2"
+          }
+        },
+        {
+          "client_id": "93817794564-c6tkl0k9ialfs154mjfcr3ttsjt1tglk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB37-Q5Kb7JE6JvNUKBRl4suX5SV32zva0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "93817794564-c6tkl0k9ialfs154mjfcr3ttsjt1tglk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

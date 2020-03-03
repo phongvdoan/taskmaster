@@ -9,7 +9,7 @@
 					"defaultAuthentication": {
 						"authenticationType": "API_KEY",
 						"apiKeyConfig": {
-							"description": "taskkey",
+							"description": "task description",
 							"apiKeyExpirationDays": "30"
 						}
 					}
@@ -18,7 +18,7 @@
 		}
 	},
 	"auth": {
-		"taskmaster178e3622": {
+		"taskmasteref25d0bb": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
 			"dependsOn": [],
@@ -26,7 +26,7 @@
 		}
 	},
 	"storage": {
-		"taskPics": {
+		"s3c691c6f0": {
 			"service": "S3",
 			"providerPlugin": "awscloudformation"
 		}
