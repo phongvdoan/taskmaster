@@ -1,13 +1,6 @@
 package com.phongvdoan.taskmaster;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,6 +13,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.amazonaws.amplify.generated.graphql.ListTasksQuery;
 import com.amazonaws.mobile.client.AWSMobileClient;
@@ -39,10 +38,9 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.amazonaws.mobile.client.UserState.SIGNED_IN;
 import static com.amazonaws.mobile.client.UserState.SIGNED_OUT;
 
-public class MainActivity extends Activity implements MyTaskRecyclerViewAdapter.TaskListener {
+public class MainActivity extends AppCompatActivity implements MyTaskRecyclerViewAdapter.TaskListener {
 
     private String TAG= "pvd.main";
     private List<Task> taskList = new LinkedList<>();
