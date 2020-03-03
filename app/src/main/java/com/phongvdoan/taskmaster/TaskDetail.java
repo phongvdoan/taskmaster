@@ -63,7 +63,7 @@ public class TaskDetail extends AppCompatActivity {
         TextView statusTextVeiw = findViewById(R.id.taskStatus);
         statusTextVeiw.setText(oneTask.state);
         ImageView imageView = findViewById(R.id.taskImage);
-        String url = "https://taskmasterb8b8d3a388424cb587c7f95d04e007f5185518-todo.s3-us-west-2.amazonaws.com/" + oneTask.uri;
+        String url = "https://taskmaster879d0b8cad184fecbff2609a8bf14c8c210659-todo.s3-us-west-2.amazonaws.com/" + oneTask.uri;
 //        imageView.setImageURI(Uri.parse(url));
         Picasso.get()
                 .load(url)

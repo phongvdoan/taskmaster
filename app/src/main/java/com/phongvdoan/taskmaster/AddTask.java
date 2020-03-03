@@ -7,6 +7,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -104,6 +107,7 @@ public class AddTask extends AppCompatActivity {
         @Override
         public void onResponse(@Nonnull Response<CreateTaskMutation.Data> response) {
             Log.i(TAG, "Added Task");
+            Handler handler = new Handler(Looper.getMainLooper());
             String dynamoDBID = response.data().createTask().id();
             System.out.println("dynamoDBID = " + dynamoDBID);
             String title = response.data().createTask().title();
@@ -139,17 +143,10 @@ public class AddTask extends AppCompatActivity {
                         .s3Client(new AmazonS3Client(AWSMobileClient.getInstance(), Region.getRegion(Regions.EU_WEST_2)))
                         .build();
 
-        File file = new File(getApplicationContext().getFilesDir(), "sample.txt");
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.close();
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
         uuid = UUID.randomUUID().toString();
         TransferObserver uploadObserver =
                 transferUtility.upload(
-                        "taskmasterb8b8d3a388424cb587c7f95d04e007f5185518-todo",
+                        "taskmaster879d0b8cad184fecbff2609a8bf14c8c210659-todo",
                         "public/" + uuid,
                         new File(picturePath));
 
