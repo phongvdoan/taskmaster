@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
     TaskDatabase taskDatabase;
     private static PinpointManager pinpointManager;
 
+
     private AWSAppSyncClient awsAppSyncClient;
 
     @SuppressLint("SetTextI18n")
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
                     }
                 }
         );
+        getPinpointManager(getApplicationContext());
 
         taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
 //        this.taskList = taskDatabase.taskDao().getAll();
@@ -305,43 +307,43 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
         }
     };
 
-//    public static PinpointManager getPinpointManager(final Context applicationContext) {
-//        if (pinpointManager == null) {
-//            final AWSConfiguration awsConfig = new AWSConfiguration(applicationContext);
-//            AWSMobileClient.getInstance().initialize(applicationContext, awsConfig, new Callback<UserStateDetails>() {
-//                @Override
-//                public void onResult(UserStateDetails userStateDetails) {
-//                    Log.i("INIT", userStateDetails.getUserState().toString());
-//                }
-//
-//                @Override
-//                public void onError(Exception e) {
-//                    Log.e("INIT", "Initialization error.", e);
-//                }
-//            });
-//
-//            PinpointConfiguration pinpointConfig = new PinpointConfiguration(
-//                    applicationContext,
-//                    AWSMobileClient.getInstance(),
-//                    awsConfig);
-//
-//            pinpointManager = new PinpointManager(pinpointConfig);
-//
-//            FirebaseInstanceId.getInstance().getInstanceId()
-//                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-//                        @Override
-//                        public void onComplete(@NonNull com.google.android.gms.tasks.Task<InstanceIdResult> task) {
-//                            if (!task.isSuccessful()) {
-//                                Log.w(TAG, "getInstanceId failed", task.getException());
-//                                return;
-//                            }
-//                            final String token = task.getResult().getToken();
-//                            Log.d(TAG, "Registering push notifications token: " + token);
-//                            pinpointManager.getNotificationClient().registerDeviceToken(token);
-//                        }
-//                    });
-//        }
-//        return pinpointManager;
-//    }
+    public static PinpointManager getPinpointManager(final Context applicationContext) {
+        if (pinpointManager == null) {
+            final AWSConfiguration awsConfig = new AWSConfiguration(applicationContext);
+            AWSMobileClient.getInstance().initialize(applicationContext, awsConfig, new Callback<UserStateDetails>() {
+                @Override
+                public void onResult(UserStateDetails userStateDetails) {
+                    Log.i("INIT", userStateDetails.getUserState().toString());
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("INIT", "Initialization error.", e);
+                }
+            });
+
+            PinpointConfiguration pinpointConfig = new PinpointConfiguration(
+                    applicationContext,
+                    AWSMobileClient.getInstance(),
+                    awsConfig);
+
+            pinpointManager = new PinpointManager(pinpointConfig);
+
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull com.google.android.gms.tasks.Task<InstanceIdResult> task) {
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "getInstanceId failed", task.getException());
+                                return;
+                            }
+                            final String token = task.getResult().getToken();
+                            Log.d(TAG, "Registering push notifications token: " + token);
+                            pinpointManager.getNotificationClient().registerDeviceToken(token);
+                        }
+                    });
+        }
+        return pinpointManager;
+    }
 
 }
