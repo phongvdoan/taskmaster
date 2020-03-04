@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -38,9 +37,7 @@ import com.apollographql.apollo.GraphQLCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -70,6 +67,22 @@ public class AddTask extends AppCompatActivity {
                 .build();
 
         file = findViewById(R.id.imageUpload);
+
+        Intent intent = getIntent();
+
+        String intentType = intent.getType();
+        if (intentType != null && intentType.contains("image/")) {
+            // Handle intents with image data ...
+            Uri imageURI = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            if(imageURI != null) {
+                if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+                } else {
+                    Log.i(TAG + " imageURI", imageURI.toString());
+                    onImagePicked(imageURI);
+                }
+            }
+        }
 
     }
     public void submit(View v) {
@@ -224,11 +237,15 @@ public class AddTask extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Get the URI that points to the selected contact
                 Uri imageURI = intent.getData();
-
-                file.setImageURI(imageURI);
-                uploadWithTransferUtility(imageURI);
+                Log.i(TAG + " imageURI",imageURI.toString());
+                onImagePicked(imageURI);
             }
         }
+    }
+
+    public void onImagePicked(Uri uri){
+        file.setImageURI(uri);
+        uploadWithTransferUtility(uri);
     }
 }
 

@@ -103,8 +103,6 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
         );
         getPinpointManager(getApplicationContext());
 
-        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
-//        this.taskList = taskDatabase.taskDao().getAll();
 
         //connect to AWS
         awsAppSyncClient = AWSAppSyncClient.builder()
@@ -303,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
 
         @Override
         public void onFailure(@Nonnull ApolloException e) {
-            Log.e(TAG, e.toString());
+            Log.e(TAG + "error", e.toString());
         }
     };
 
