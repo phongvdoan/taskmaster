@@ -83,4 +83,14 @@
 
 <img src="screenshots/pushnotification.png" width="200"/>
 
+## Intent Filter
+
+### 3 Mar 2020
+
+- User can be share image to taskmaster app to add a task
+
+<img src="screenshots/share.png" width="200"/>
+<br>
+<img src="screenshots/addtaskwithshare.png" width="200"/>
+
 
