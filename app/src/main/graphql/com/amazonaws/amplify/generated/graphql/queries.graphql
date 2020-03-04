@@ -6,6 +6,8 @@ query GetTask($id: ID!) {
     body
     state
     uri
+    cityName
+    stateName
   }
 }
 query ListTasks(
@@ -20,6 +22,8 @@ query ListTasks(
       body
       state
       uri
+      cityName
+      stateName
     }
     nextToken
   }
