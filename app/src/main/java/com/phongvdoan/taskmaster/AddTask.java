@@ -140,7 +140,7 @@ public class AddTask extends AppCompatActivity {
                 TransferUtility.builder()
                         .context(getApplicationContext())
                         .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
-                        .s3Client(new AmazonS3Client(AWSMobileClient.getInstance(), Region.getRegion(Regions.EU_WEST_2)))
+                        .s3Client(new AmazonS3Client(AWSMobileClient.getInstance(), Region.getRegion(Regions.US_WEST_2)))
                         .build();
 
         uuid = UUID.randomUUID().toString();
