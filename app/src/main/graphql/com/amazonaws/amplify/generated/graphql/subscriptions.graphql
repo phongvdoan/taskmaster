@@ -6,6 +6,8 @@ subscription OnCreateTask {
     body
     state
     uri
+    cityName
+    stateName
   }
 }
 subscription OnUpdateTask {
@@ -15,6 +17,8 @@ subscription OnUpdateTask {
     body
     state
     uri
+    cityName
+    stateName
   }
 }
 subscription OnDeleteTask {
@@ -24,5 +28,7 @@ subscription OnDeleteTask {
     body
     state
     uri
+    cityName
+    stateName
   }
 }

@@ -49,7 +49,7 @@ import static com.amazonaws.mobile.client.UserState.SIGNED_OUT;
 public class MainActivity extends AppCompatActivity implements MyTaskRecyclerViewAdapter.TaskListener {
 
     private static String TAG= "pvd.main";
-    private List<Task> taskList = new LinkedList<>();
+    public static List<Task> taskList = new LinkedList<>();
     TaskDatabase taskDatabase;
     private static PinpointManager pinpointManager;
 
@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
             if (taskList.size() == 0 || response.data().listTasks().items().size() != taskList.size()) {
                 taskList.clear();
                 for (ListTasksQuery.Item item : response.data().listTasks().items()) {
-                    Task retrievedTask = new Task(item.title(), item.body(), item.state(), item.id(), item.uri());
+                    Task retrievedTask = new Task(item.title(), item.body(), item.state(), item.id(), item.uri(), item.cityName(), item.stateName());
                     taskList.add(retrievedTask);
                 }
                 Handler handlerForMainThread = new Handler(Looper.getMainLooper()) {
@@ -302,7 +302,9 @@ public class MainActivity extends AppCompatActivity implements MyTaskRecyclerVie
         @Override
         public void onFailure(@Nonnull ApolloException e) {
             Log.e(TAG + "error", e.toString());
+            taskList = taskDatabase.taskDao().getAll();
         }
+
     };
 
     public static PinpointManager getPinpointManager(final Context applicationContext) {

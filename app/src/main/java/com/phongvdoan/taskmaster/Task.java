@@ -16,24 +16,30 @@ public class Task {
     String body;
     String state;
     String uri;
+    String cityName;
+    String stateName;
 
 
 
     @Ignore
-    public Task(String title, String body, String state, String uri) {
+    public Task(String title, String body, String state, String uri, String cityName, String stateName) {
         this.title = title;
         this.body = body;
         this.state = state;
         this.uri = uri;
+        this.cityName = cityName;
+        this.stateName = stateName;
 
     }
 
-    public Task(String title, String body, String state, String dynamoDBId, String uri) {
+    public Task(String title, String body, String state, String dynamoDBId, String uri, String cityName, String stateName) {
         this.title = title;
         this.body = body;
         this.state = state;
         this.dynamoDBId = dynamoDBId;
         this.uri = uri;
+        this.cityName = cityName;
+        this.stateName = stateName;
     }
 
     public String getTitle() {

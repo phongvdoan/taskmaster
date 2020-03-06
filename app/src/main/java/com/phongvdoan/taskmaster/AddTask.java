@@ -5,6 +5,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,8 +39,14 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.apollographql.apollo.GraphQLCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -47,6 +56,10 @@ import type.CreateTaskInput;
 public class AddTask extends AppCompatActivity {
 
     private String TAG = "pvd.addTask";
+
+    private FusedLocationProviderClient fusedLocationClient;
+    String cityName = " ";
+    String stateName = " ";
 
     TaskDatabase taskDatabase;
     private AWSAppSyncClient awsAppSyncClient;
@@ -59,6 +72,7 @@ public class AddTask extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
+        addLocation();
         taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_database").allowMainThreadQueries().build();
 
         awsAppSyncClient = AWSAppSyncClient.builder()
@@ -94,7 +108,7 @@ public class AddTask extends AppCompatActivity {
         String newDescription = descriptEditText.getText().toString();
 
 
-        addOneTaskToDynamoDB(newTitle, newDescription, "public/" + uuid);
+        addOneTaskToDynamoDB(newTitle, newDescription, "public/" + uuid, cityName, stateName);
 
         //Toasts
         Toast submitToast = Toast.makeText(getApplicationContext(), "Submitted!", Toast.LENGTH_SHORT);
@@ -104,12 +118,14 @@ public class AddTask extends AppCompatActivity {
 
     }
 
-    public void addOneTaskToDynamoDB(String title, String body, String uri) {
+    public void addOneTaskToDynamoDB(String title, String body, String uri, String cityName, String stateName) {
         CreateTaskInput createTaskInput = CreateTaskInput.builder().
                 title(title).
                 body(body).
                 state("New").
                 uri(uri).
+                cityName(cityName).
+                stateName(stateName).
                 build();
 
         awsAppSyncClient.mutate(CreateTaskMutation.builder().input(createTaskInput).build())
@@ -126,7 +142,9 @@ public class AddTask extends AppCompatActivity {
             String title = response.data().createTask().title();
             String body = response.data().createTask().body();
             String uri = response.data().createTask().uri();
-            Task newTask = new Task(title, body, "New", dynamoDBID, uri);
+            String cityName = response.data().createTask().cityName();
+            String stateName = response.data().createTask().stateName();
+            Task newTask = new Task(title, body, "New", dynamoDBID, uri,cityName,stateName);
             taskDatabase.taskDao().save(newTask);
             Intent gotToMainActivityIntent = new Intent(AddTask.this, MainActivity.class);
             AddTask.this.startActivity(gotToMainActivityIntent);
@@ -241,6 +259,34 @@ public class AddTask extends AppCompatActivity {
                 onImagePicked(imageURI);
             }
         }
+    }
+
+    public void addLocation() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
+
+                        Geocoder geocoder = new Geocoder(AddTask.this, Locale.getDefault());
+                        List<Address> addresses;
+                        try {
+                            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                            cityName = addresses.get(0).getAddressLine(0);
+                            stateName = addresses.get(0).getAddressLine(1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        if (location != null) {
+                            // Logic to handle location object
+                        }
+                    }
+                });
     }
 
     public void onImagePicked(Uri uri){
